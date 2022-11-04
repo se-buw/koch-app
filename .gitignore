@@ -28,6 +28,10 @@ hs_err_pid*
 # Ignore IntelliJ directory
 .idea
 
+# Ignore .DS_Store
+.DS_Store
+**/.DS_Store
+
 # Ignore VSCode directory 
 .vscode
 
