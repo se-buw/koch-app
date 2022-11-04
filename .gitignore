@@ -25,5 +25,14 @@ hs_err_pid*
 # Ignore Gradle project-specific cache directory
 .gradle
 
+# Ignore IntelliJ directory
+.idea
+
+# Ignore VSCode directory 
+.vscode
+
 # Ignore Gradle build output directory
 build
+
+# Ignore Gradle bin directory
+bin
