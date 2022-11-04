@@ -9,6 +9,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    
 }
 
 repositories {
@@ -26,6 +27,7 @@ dependencies {
     // working with CSV files
     // https://github.com/eugenp/tutorials/tree/master/libraries-apache-commons-io
     implementation 'org.apache.commons:commons-csv:1.9.0'
+
 }
 
 application {
