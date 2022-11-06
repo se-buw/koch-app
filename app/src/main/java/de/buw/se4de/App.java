@@ -22,7 +22,8 @@ public class App {
 		JFrame mainWindow = new JFrame("Koch-App");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setSize(800, 600);
-		JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+		mainWindow.setResizable(false);
+		JPanel mainPanel = new JPanel(new GridLayout(0, 2, 10, 10));
 		JPanel rezeptPanel = new JPanel(new BorderLayout());
 		JLabel rezeptLabel = new JLabel("Rezeptbuch", SwingConstants.CENTER);
 		JButton rezeptButton = new JButton("Rezeptbuch öffnen");
