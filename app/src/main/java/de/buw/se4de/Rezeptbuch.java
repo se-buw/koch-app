@@ -20,12 +20,13 @@ public class Rezeptbuch {
         System.out.println("Rezeptbuch geöffnet");
 
         // Rezepte laden
-        load("src/main/resources/rezeptbuch.csv");
+        rezepte.addAll(load("src/main/resources/rezeptbuch.csv"));
 
         run();
     }
 
-    void load(String pfad) {
+    ArrayList<Rezept> load(String pfad) {
+        ArrayList<Rezept> temp = new ArrayList<Rezept>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad));
 			@SuppressWarnings("deprecation")
 			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
@@ -41,12 +42,13 @@ public class Rezeptbuch {
                     int personen = Integer.parseInt(personenStr);
                     String[] kategorien = kategorienVoll.split(";");
 
-                    Rezept temp = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung);
-                    rezepte.add(temp);
+                    Rezept rezept = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung);
+                    temp.add(rezept);
                 }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+        return temp;
     } 
 
     void run() {
