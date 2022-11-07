@@ -50,13 +50,12 @@ public class Rezeptbuch {
                 for (CSVRecord csvRecord : csvParser) {
                     String name = csvRecord.get("name");
                     String zutatenVoll = csvRecord.get("zutaten");
-                    String personenStr = csvRecord.get("personen");
+                    String personen = csvRecord.get("personen");
                     String kategorienVoll = csvRecord.get("kategorien");
                     String zeit = csvRecord.get("zeit");
                     String zubereitung = csvRecord.get("zubereitung").replaceAll(";", "\n");
 
                     String[] zutaten = zutatenVoll.split(";");
-                    int personen = Integer.parseInt(personenStr);
                     String[] kategorien = kategorienVoll.split(";");
 
                     Rezept rezept = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung);
@@ -87,7 +86,7 @@ public class Rezeptbuch {
             JButton tempButton = new JButton(rezept.name);
 
             tempButton.addActionListener(e -> {
-                setupButton(rezept);
+                setupButton(rezept, tempButton);
             });
 
             tempButton.setPreferredSize(new Dimension(0, 200));
@@ -131,7 +130,7 @@ public class Rezeptbuch {
         return true;
     }
 
-    void setupButton(Rezept rezept) {
+    void setupButton(Rezept rezept, JButton button) {
         if (rezept_offen) {
             rezeptWindow.toFront();
             rezeptWindow.requestFocus();
@@ -157,7 +156,48 @@ public class Rezeptbuch {
         rezeptPanel.setLayout(new BoxLayout(rezeptPanel, BoxLayout.Y_AXIS));
         rezeptPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        JLabel nameLabel = new JLabel("Name");
+        JTextField nameField = new JTextField();
+        JLabel kategorienLabel = new JLabel("Kategorien");
+        JTextArea kategorienArea = new JTextArea();
+        JLabel zutatenLabel = new JLabel("Zutaten");
+        JTextArea zutatenArea = new JTextArea();
+        JLabel personenLabel = new JLabel("Personen Anzahl");
+        JTextField personenField = new JTextField();
+        JLabel zeitLabel = new JLabel("Zubereitungs Dauer");
+        JTextField zeitField = new JTextField();
+        JLabel zubereitungLabel = new JLabel("Zubereitung");
+        JTextArea zubereitungArea = new JTextArea();
+
+        nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, nameField.getPreferredSize().height));
+        personenField.setMaximumSize(new Dimension(Integer.MAX_VALUE, personenField.getPreferredSize().height));
+        zeitField.setMaximumSize(new Dimension(Integer.MAX_VALUE, zeitField.getPreferredSize().height));
+
+        rezeptPanel.add(nameLabel);
+        rezeptPanel.add(nameField);
+        rezeptPanel.add(kategorienLabel);
+        rezeptPanel.add(kategorienArea);
+        rezeptPanel.add(zutatenLabel);
+        rezeptPanel.add(zutatenArea);
+        rezeptPanel.add(personenLabel);
+        rezeptPanel.add(personenField);
+        rezeptPanel.add(zeitLabel);
+        rezeptPanel.add(zeitField);
+        rezeptPanel.add(zubereitungLabel);
+        rezeptPanel.add(zubereitungArea);
+
+
+        JPanel funktionenPanel = new JPanel();
+        JButton editButton = new JButton("Editiermodus aktivieren");
+        JButton saveButton = new JButton("Speichern");
+        JButton exportButton = new JButton("Exportieren");
+
+        funktionenPanel.add(editButton);
+        funktionenPanel.add(saveButton);
+        funktionenPanel.add(exportButton);
+
         mainPanel.add(rezeptPanel);
+        mainPanel.add(funktionenPanel, BorderLayout.NORTH);
 
         rezeptWindow.getContentPane().add(mainPanel);
 

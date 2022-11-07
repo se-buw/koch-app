@@ -3,12 +3,12 @@ package de.buw.se4de;
 public class Rezept {
     String name;
     String[] zutaten;
-    int personen;
+    String personen;
     String[] kategorien;
     String zeit;
     String zubereitung;
 
-    public Rezept(String name, String[] zutaten, int personen, String[] kategorien, String zeit, String zubereitung) {
+    public Rezept(String name, String[] zutaten, String personen, String[] kategorien, String zeit, String zubereitung) {
         this.name = name;
         this.zutaten = zutaten;
         this.personen = personen;
