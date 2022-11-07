@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -18,15 +20,26 @@ import org.apache.commons.csv.CSVRecord;
 
 public class Rezeptbuch {
 
+    static final String path = "src/main/resources/rezeptbuch.csv";
     ArrayList<Rezept> rezepte = new ArrayList<Rezept>();
 
-    void init() {
+    JFrame rezeptBuchWindow;
+    JFrame rezeptWindow;
+
+    boolean running = false;
+    boolean rezept_offen = false;
+
+    JFrame init() {
+        if (running) return rezeptBuchWindow;
+        running = true;
         System.out.println("Rezeptbuch geöffnet");
 
         // Rezepte laden
-        rezepte.addAll(load("src/main/resources/rezeptbuch.csv"));
+        rezepte.addAll(load(path));
 
         initWindow();
+
+        return rezeptBuchWindow;
     }
 
     ArrayList<Rezept> load(String pfad) {
@@ -55,39 +68,27 @@ public class Rezeptbuch {
         return temp;
     } 
 
-    void run() {
-
-        for (Rezept rezept : rezepte) {
-            System.out.println(rezept.name);
-            System.out.println(rezept.zubereitung);
-            System.out.println("Für " + rezept.personen + " Personen!");
-        }
-
-        // Wahl ermöglichen
-        // Rezepte zeigen
-
-        // Rezepte ändern
-
-        // Rezepte löschen
-
-        // Rezepte importieren
-
-        // Rezepte exportieren
-
-        // Rezepte suchen
-    }
-
     boolean initWindow() {
-        JFrame rezeptWindow = new JFrame("Rezeptbuch");
-		rezeptWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		rezeptWindow.setSize(1280, 720);
-        rezeptWindow.setResizable(false);
+        rezeptBuchWindow = new JFrame("Rezeptbuch");
+		rezeptBuchWindow.setSize(1280, 720);
+        rezeptBuchWindow.setResizable(false);
+
+        rezeptBuchWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                save(path);
+                unload();
+            }
+        });
 		
         JPanel auswahlPanel = new JPanel(new GridLayout(0, 5, 20, 20));
 
         for (Rezept rezept : rezepte) {
             JButton tempButton = new JButton(rezept.name);
-            // knopf soll Fenster öffnen, mit dem man das Rezept bearbeiten kann
+
+            tempButton.addActionListener(e -> {
+                setupButton(rezept);
+            });
 
             tempButton.setPreferredSize(new Dimension(0, 200));
             auswahlPanel.add(tempButton);
@@ -108,10 +109,10 @@ public class Rezeptbuch {
         JTextField suchNameTextField = new JTextField();
         JTextField suchKategorieTextField = new JTextField();
         JButton suchButton = new JButton("Suchen");
-        // Button soll Suche starten
+        JButton importButton = new JButton("Importieren");
 
-        suchNameTextField.setColumns(45);
-        suchKategorieTextField.setColumns(45);
+        suchNameTextField.setColumns(30);
+        suchKategorieTextField.setColumns(30);
 
         suchKategorieTextField.setToolTipText("Man kann mehrere Kategorien mit \",\" angeben");
 
@@ -120,12 +121,61 @@ public class Rezeptbuch {
         suchPanel.add(suchKategorieLabel);
         suchPanel.add(suchKategorieTextField);
         suchPanel.add(suchButton);
+        suchPanel.add(importButton);
         
-        rezeptWindow.getContentPane().add(suchPanel, BorderLayout.NORTH);
-        rezeptWindow.getContentPane().add(auswahlScrollPanel);
+        rezeptBuchWindow.getContentPane().add(suchPanel, BorderLayout.NORTH);
+        rezeptBuchWindow.getContentPane().add(auswahlScrollPanel);
         
-		rezeptWindow.setVisible(true);
+		rezeptBuchWindow.setVisible(true);
 
         return true;
+    }
+
+    void setupButton(Rezept rezept) {
+        if (rezept_offen) {
+            rezeptWindow.toFront();
+            rezeptWindow.requestFocus();
+            return;
+        }
+        rezept_offen = true;
+        
+        rezeptWindow = new JFrame(rezept.name);
+        rezeptWindow.setSize(500, 720);
+        rezeptWindow.setResizable(false);
+
+        rezeptWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                rezept_offen = false;
+            }
+        });
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel rezeptPanel = new JPanel();
+        rezeptPanel.setLayout(new BoxLayout(rezeptPanel, BoxLayout.Y_AXIS));
+        rezeptPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        mainPanel.add(rezeptPanel);
+
+        rezeptWindow.getContentPane().add(mainPanel);
+
+        rezeptWindow.setVisible(true);
+        rezeptWindow.toFront();
+        rezeptWindow.requestFocus();
+    }
+
+    boolean save(String pfad) {
+
+        return true;
+    }
+
+    void unload() {
+        rezepte.clear();
+        rezeptWindow.dispatchEvent(new WindowEvent(rezeptWindow, WindowEvent.WINDOW_CLOSING));
+        running = false;
+        rezeptBuchWindow = null;
+        rezeptWindow = null;
     }
 }

@@ -44,16 +44,20 @@ public class App {
 
 		mainWindow.getContentPane().add(mainPanel);
 
-		mainWindow.setVisible(true);
-
 		setupButtons(rezeptButton, einkaufslisteButton);
+
+		mainWindow.setVisible(true);
+		mainWindow.toFront();
+		mainWindow.requestFocus();
 
 		return true;
 	}
 
 	static boolean setupButtons(JButton rButton, JButton eButton) {
 		rButton.addActionListener(e -> {
-			buch.init();
+			JFrame rezeptBuchWindow = buch.init();
+			rezeptBuchWindow.toFront();
+        	rezeptBuchWindow.requestFocus();
 		});
 
 		return true;
