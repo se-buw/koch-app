@@ -167,7 +167,7 @@ public class Rezeptbuch {
         JTextArea zutatenArea = new JTextArea();
         JLabel personenLabel = new JLabel("Personen Anzahl", SwingConstants.CENTER);
         JTextField personenField = new JTextField();
-        JLabel zeitLabel = new JLabel("Zubereitungs Dauer", SwingConstants.CENTER);
+        JLabel zeitLabel = new JLabel("Zubereitungs Dauer (Format DD:HH:MM)", SwingConstants.CENTER);
         JTextField zeitField = new JTextField();
         JLabel zubereitungLabel = new JLabel("Zubereitung", SwingConstants.CENTER);
         JTextArea zubereitungArea = new JTextArea();
@@ -188,13 +188,7 @@ public class Rezeptbuch {
 
         nameField.setText(rezept.name);
         personenField.setText(rezept.personen);
-        int days = Integer.parseInt(rezept.zeit.substring(0, 2));
-        int hours = Integer.parseInt(rezept.zeit.substring(3, 5));
-        int mins = Integer.parseInt(rezept.zeit.substring(6, 8));
-        if (days > 0)
-            zeitField.setText("Tage: " + days + " Stunden: " + hours + " Minuten: " + mins);
-        else 
-            zeitField.setText("Stunden: " + hours + " Minuten: " + mins);
+        zeitField.setText(rezept.zeit);
         zubereitungArea.setText(rezept.zubereitung);
         zutatenArea.setText(String.join("\n", rezept.zutaten));
         kategorienArea.setText(String.join(", ", rezept.kategorien));
@@ -252,6 +246,15 @@ public class Rezeptbuch {
                 is_editable = !is_editable;
             }
 		});
+
+        saveButton.addActionListener(e -> {
+            rezept.name = nameField.getText();
+            button.setText(rezept.name);
+        });
+
+        exportButton.addActionListener(e -> {
+            
+        });
     }
 
     boolean save(String pfad) {
@@ -261,7 +264,8 @@ public class Rezeptbuch {
 
     void unload() {
         rezepte.clear();
-        rezeptWindow.dispatchEvent(new WindowEvent(rezeptWindow, WindowEvent.WINDOW_CLOSING));
+        if (rezeptWindow != null)
+            rezeptWindow.dispatchEvent(new WindowEvent(rezeptWindow, WindowEvent.WINDOW_CLOSING));
         running = false;
         rezeptBuchWindow = null;
         rezeptWindow = null;
