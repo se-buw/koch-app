@@ -20,14 +20,16 @@ import org.apache.commons.csv.CSVRecord;
 
 public class Rezeptbuch {
 
-    static final String path = "src/main/resources/rezeptbuch.csv";
-    ArrayList<Rezept> rezepte = new ArrayList<Rezept>();
+    private static final String path = "src/main/resources/rezeptbuch.csv";
+    private ArrayList<Rezept> rezepte = new ArrayList<Rezept>();
 
-    JFrame rezeptBuchWindow;
-    JFrame rezeptWindow;
+    private JFrame rezeptBuchWindow;
+    private JFrame rezeptWindow;
 
-    boolean running = false;
-    boolean rezept_offen = false;
+    private boolean running = false;
+    private boolean rezept_offen = false;
+
+    private boolean is_editable = false;
 
     JFrame init() {
         if (running) return rezeptBuchWindow;
@@ -137,6 +139,7 @@ public class Rezeptbuch {
             return;
         }
         rezept_offen = true;
+        is_editable = false;
         
         rezeptWindow = new JFrame(rezept.name);
         rezeptWindow.setSize(500, 720);
@@ -156,22 +159,45 @@ public class Rezeptbuch {
         rezeptPanel.setLayout(new BoxLayout(rezeptPanel, BoxLayout.Y_AXIS));
         rezeptPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel nameLabel = new JLabel("Name");
+        JLabel nameLabel = new JLabel("Name", SwingConstants.CENTER);
         JTextField nameField = new JTextField();
-        JLabel kategorienLabel = new JLabel("Kategorien");
+        JLabel kategorienLabel = new JLabel("Kategorien", SwingConstants.CENTER);
         JTextArea kategorienArea = new JTextArea();
-        JLabel zutatenLabel = new JLabel("Zutaten");
+        JLabel zutatenLabel = new JLabel("Zutaten", SwingConstants.CENTER);
         JTextArea zutatenArea = new JTextArea();
-        JLabel personenLabel = new JLabel("Personen Anzahl");
+        JLabel personenLabel = new JLabel("Personen Anzahl", SwingConstants.CENTER);
         JTextField personenField = new JTextField();
-        JLabel zeitLabel = new JLabel("Zubereitungs Dauer");
+        JLabel zeitLabel = new JLabel("Zubereitungs Dauer", SwingConstants.CENTER);
         JTextField zeitField = new JTextField();
-        JLabel zubereitungLabel = new JLabel("Zubereitung");
+        JLabel zubereitungLabel = new JLabel("Zubereitung", SwingConstants.CENTER);
         JTextArea zubereitungArea = new JTextArea();
 
         nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, nameField.getPreferredSize().height));
         personenField.setMaximumSize(new Dimension(Integer.MAX_VALUE, personenField.getPreferredSize().height));
         zeitField.setMaximumSize(new Dimension(Integer.MAX_VALUE, zeitField.getPreferredSize().height));
+
+        kategorienArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, kategorienArea.getPreferredSize().height));
+        zutatenArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, zutatenArea.getPreferredSize().height));
+
+        nameField.setEditable(false);
+        kategorienArea.setEditable(false);
+        zutatenArea.setEditable(false);
+        personenField.setEditable(false);
+        zeitField.setEditable(false);
+        zubereitungArea.setEditable(false);
+
+        nameField.setText(rezept.name);
+        personenField.setText(rezept.personen);
+        int days = Integer.parseInt(rezept.zeit.substring(0, 2));
+        int hours = Integer.parseInt(rezept.zeit.substring(3, 5));
+        int mins = Integer.parseInt(rezept.zeit.substring(6, 8));
+        if (days > 0)
+            zeitField.setText("Tage: " + days + " Stunden: " + hours + " Minuten: " + mins);
+        else 
+            zeitField.setText("Stunden: " + hours + " Minuten: " + mins);
+        zubereitungArea.setText(rezept.zubereitung);
+        zutatenArea.setText(String.join("\n", rezept.zutaten));
+        kategorienArea.setText(String.join(", ", rezept.kategorien));
 
         rezeptPanel.add(nameLabel);
         rezeptPanel.add(nameField);
@@ -204,6 +230,28 @@ public class Rezeptbuch {
         rezeptWindow.setVisible(true);
         rezeptWindow.toFront();
         rezeptWindow.requestFocus();
+
+        editButton.addActionListener(e -> {
+			if(is_editable) {
+                nameField.setEditable(false);
+                kategorienArea.setEditable(false);
+                zutatenArea.setEditable(false);
+                personenField.setEditable(false);
+                zeitField.setEditable(false);
+                zubereitungArea.setEditable(false);
+                editButton.setText("Editiermodus aktivieren");
+                is_editable = !is_editable;
+            } else {
+                nameField.setEditable(true);
+                kategorienArea.setEditable(true);
+                zutatenArea.setEditable(true);
+                personenField.setEditable(true);
+                zeitField.setEditable(true);
+                zubereitungArea.setEditable(true);
+                editButton.setText("Editiermodus deaktivieren");
+                is_editable = !is_editable;
+            }
+		});
     }
 
     boolean save(String pfad) {
