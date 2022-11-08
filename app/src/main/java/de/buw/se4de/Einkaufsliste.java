@@ -8,12 +8,15 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.*;
 import java.util.Scanner;
 
+import java.io.FileWriter;
+
 public class Einkaufsliste {
     private static final String LISTE = "liste.csv";
 
     public static void einkaufen() {
         load();
         write();
+        load();
     }
 
     public static void load() {
@@ -38,10 +41,8 @@ public class Einkaufsliste {
             System.err.print("Datei konnte nicht erstellt werden.");
             throw new RuntimeException(e);
         }
-        try(
-                BufferedWriter writer = new BufferedWriter(new FileWriter(f));
-                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                    .withHeader("Item", "Menge"));) {
+        /*try(
+                FileWriter writer = new FileWriter(f);) {
             Scanner object = new Scanner(System.in);
             String item;
             do {
@@ -50,6 +51,32 @@ public class Einkaufsliste {
                 if (item.equalsIgnoreCase("nichts")) { break; }
                 System.out.println("Wie viel möchtest du davon hinzufügen?");
                 String menge = object.nextLine();
+                String line = item + "," + menge + "\n";
+                writer.write(line);
+                // Hier muss noch gespeichert werden
+            } while (true);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        try(
+                //BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
+                //CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                //   .withHeader("Item", "Menge"));) {
+                ){
+            Scanner object = new Scanner(System.in);
+            String item;
+            do {
+                //StringBuilder sb = new StringBuilder();
+                System.out.println("Was möchtest du zur Einkaufsliste hinzufügen? (Wenn nichts, dann schreib 'nichts')");
+                item = object.nextLine();
+                if (item.equalsIgnoreCase("nichts")) { break; }
+                System.out.println("Wie viel möchtest du davon hinzufügen?");
+                String menge = object.nextLine();
+                //String i = item + "," + menge + "\n";
+                //writer.append(i);
                 csvPrinter.printRecord(item, menge);
                 // Hier muss noch gespeichert werden
             } while (true);
