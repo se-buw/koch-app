@@ -13,6 +13,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import static de.buw.se4de.Einkaufsliste.einkaufen;
+
 public class App {
 	public String getGreeting() {
 		String result = "";
@@ -40,7 +42,8 @@ public class App {
 
 	public static void main(String[] args) {
 		// System.out.println(new App().getGreeting());
-		Rezeptbuch b = new Rezeptbuch();
-		b.init();
+		//Rezeptbuch b = new Rezeptbuch();
+		//b.init();
+		einkaufen();
 	}
 }

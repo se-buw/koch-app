@@ -1,23 +1,23 @@
 package de.buw.se4de;
-import java.io.*;
 
-import java.util.Scanner;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVFormat; //I added libraries by maven to the project structure
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+
+import java.io.*;
+import java.util.Scanner;
 
 public class Einkaufsliste {
     private static final String LISTE = "liste.csv";
 
-    public static void main(String[] args) {
+    public static void einkaufen() {
         load();
         write();
     }
 
     public static void load() {
-        File f = new File("/Users/anastasiakozlova/Desktop/Koch-App/koch-app/app/src/main/resources/"+LISTE);
+        File f = new File("src/main/resources/"+LISTE);
         try ( BufferedReader reader = new BufferedReader(new FileReader(f));
         CSVParser csvParser = CSVParser.parse(reader, CSVFormat.DEFAULT) ){
         for (CSVRecord csvRecord : csvParser) {
@@ -54,6 +54,23 @@ public class Einkaufsliste {
                 // Hier muss noch gespeichert werden
             } while (true);
         }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void delete() {
+        File f = new File("src/main/resources/"+LISTE);
+        try ( BufferedReader reader = new BufferedReader(new FileReader(f));
+              CSVParser csvParser = CSVParser.parse(reader, CSVFormat.DEFAULT) ){
+            Scanner object = new Scanner(System.in);
+            String item;
+            do {
+                System.out.println("Möchtest du etwas löschen? (Wenn nein, dann schreib 'nein')");
+                item = object.nextLine();
+                if (item.equalsIgnoreCase("nein")) { break; }
+                // here you'll delete
+            } while (true);
+            }
         catch (IOException e) {
             e.printStackTrace();
         }
