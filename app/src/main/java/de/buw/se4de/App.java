@@ -9,11 +9,12 @@ import java.awt.*;
 
 public class App {
 	static Rezeptbuch buch;
-	// static Einkaufsliste liste;
+	static Einkaufsliste liste;
 
 	public static void main(String[] args) {
 		// System.out.println(new App().getGreeting());
 		buch = new Rezeptbuch();
+		liste = new Einkaufsliste();
 
 		setupWindow();
 	}
@@ -27,15 +28,32 @@ public class App {
 		JPanel rezeptPanel = new JPanel(new BorderLayout());
 		JLabel rezeptLabel = new JLabel("Rezeptbuch", SwingConstants.CENTER);
 		JButton rezeptButton = new JButton("Rezeptbuch öffnen");
-		JPanel einkaufslistePanel = new JPanel(new BorderLayout());
-		JLabel einkaufslisteLabel = new JLabel("Einkaufsliste", SwingConstants.CENTER);
-		JButton einkaufslisteButton = new JButton("Einkaufsliste öffnen");
+		JPanel einkaufslistePanel = new JPanel(new GridLayout(3, 1, 10, 10));
+		JPanel einkaufslisteGUIPanel = new JPanel(new BorderLayout());
+		JPanel einkaufslisteCLIPanel = new JPanel(new BorderLayout());
+		JPanel einkaufslisteCLISubPanel = new JPanel(new GridLayout(1, 0, 10, 10));
+		JLabel einkaufslisteGUILabel = new JLabel("Einkaufsliste GUI", SwingConstants.CENTER);
+		JLabel einkaufslisteCLILabel = new JLabel("Einkaufsliste CLI", SwingConstants.CENTER);
+		JButton einkaufslisteGUIButton = new JButton("Einkaufsliste öffnen");
+		JButton einkaufslisteCLIPrintButton = new JButton("Einkaufsliste Anzeigen");
+		JButton einkaufslisteCLIAddButton = new JButton("Artikel hinzufügen");
+		JButton einkaufslisteCLIDeleteButton = new JButton("Artikel entfernen");
 
 		rezeptPanel.add(rezeptLabel, BorderLayout.NORTH);
 		rezeptPanel.add(rezeptButton, BorderLayout.CENTER);
 
-		einkaufslistePanel.add(einkaufslisteLabel, BorderLayout.NORTH);
-		einkaufslistePanel.add(einkaufslisteButton, BorderLayout.CENTER);
+		einkaufslisteCLISubPanel.add(einkaufslisteCLIPrintButton);
+		einkaufslisteCLISubPanel.add(einkaufslisteCLIAddButton);
+		einkaufslisteCLISubPanel.add(einkaufslisteCLIDeleteButton);
+
+		einkaufslisteGUIPanel.add(einkaufslisteGUILabel, BorderLayout.NORTH);
+		einkaufslisteCLIPanel.add(einkaufslisteCLILabel, BorderLayout.NORTH);
+
+		einkaufslisteGUIPanel.add(einkaufslisteGUIButton);
+		einkaufslisteCLIPanel.add(einkaufslisteCLISubPanel);
+
+		einkaufslistePanel.add(einkaufslisteGUIPanel);
+		einkaufslistePanel.add(einkaufslisteCLIPanel);
 
 		mainPanel.add(rezeptPanel);
 		mainPanel.add(einkaufslistePanel);
@@ -44,7 +62,7 @@ public class App {
 
 		mainWindow.getContentPane().add(mainPanel);
 
-		setupButtons(rezeptButton, einkaufslisteButton);
+		setupButtons(rezeptButton, einkaufslisteGUIButton, einkaufslisteCLIPrintButton, einkaufslisteCLIAddButton, einkaufslisteCLIDeleteButton);
 
 		mainWindow.setVisible(true);
 		mainWindow.toFront();
@@ -53,11 +71,29 @@ public class App {
 		return true;
 	}
 
-	static boolean setupButtons(JButton rButton, JButton eButton) {
+	static boolean setupButtons(JButton rButton, JButton eGUIButton, JButton eCLIPButton, JButton eCLIAButton, JButton eCLIDButton) {
 		rButton.addActionListener(e -> {
 			JFrame rezeptBuchWindow = buch.init();
 			rezeptBuchWindow.toFront();
         	rezeptBuchWindow.requestFocus();
+		});
+
+		eGUIButton.addActionListener(e -> {
+			JFrame einkaufslisteWindow = liste.init();
+			einkaufslisteWindow.toFront();
+        	einkaufslisteWindow.requestFocus();
+		});
+
+		eCLIPButton.addActionListener(e -> {
+			liste.print();
+		});
+
+		eCLIAButton.addActionListener(e -> {
+			liste.add_items();
+		});
+
+		eCLIDButton.addActionListener(e -> {
+			liste.delete_items();
 		});
 
 		return true;

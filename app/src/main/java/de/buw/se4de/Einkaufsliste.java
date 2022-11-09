@@ -9,13 +9,26 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+import java.awt.BorderLayout;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Einkaufsliste {
     private static final String LISTE = "src/main/resources/liste.csv";
 
-    public static void einkaufen() {
+    private Scanner scanner = new Scanner(System.in);
+
+    private boolean running = false;
+    private JFrame eWindow;
+
+    public void einkaufen() {
         print();
         add_items();
         print();
@@ -23,7 +36,69 @@ public class Einkaufsliste {
         print();
     }
 
-    public static void print() {
+    public JFrame init() {
+        if (running) return eWindow;
+        running = true;
+        
+        eWindow = new JFrame("Einkaufsliste");
+		eWindow.setSize(400, 800);
+		eWindow.setResizable(false);
+
+        eWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                running = false;
+                eWindow = null;
+            }
+        });
+
+        JButton saveButton = new JButton("Speichern");
+        JTextArea textArea = new JTextArea();
+
+        String inhalt = "";
+
+        File f = new File(LISTE);
+        //opening the reader and parser for the csv file
+        try ( BufferedReader reader = new BufferedReader(new FileReader(f));
+        CSVParser csvParser = CSVParser.parse(reader, CSVFormat.DEFAULT) ){
+            //looping through the lines in the csv file
+            for (CSVRecord csvRecord : csvParser) {
+                String item = csvRecord.get(0);
+                String menge = csvRecord.get(1);
+                //printing each line
+                inhalt = inhalt.concat(item + " " + menge + "\n");
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        textArea.setText(inhalt);
+
+        saveButton.addActionListener(e -> {
+            String neuerInhalt = textArea.getText();
+            try(
+            BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+            CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)){
+                for (String zeile : neuerInhalt.split("\n")) {
+                    String[] temp = zeile.split(" ");
+                    String item = temp[0];
+                    String menge = temp[1];
+                    csvPrinter.printRecord(item, menge);
+                } 
+            } catch (IOException err) {
+                err.printStackTrace();
+            }
+        });
+
+        eWindow.getContentPane().add(textArea);
+        eWindow.getContentPane().add(saveButton, BorderLayout.NORTH);
+        eWindow.setVisible(true);
+
+        return eWindow;
+    }
+
+    public void print() {
         File f = new File(LISTE);
         //opening the reader and parser for the csv file
         try ( BufferedReader reader = new BufferedReader(new FileReader(f));
@@ -40,7 +115,7 @@ public class Einkaufsliste {
             e.printStackTrace();
         }
     }
-    public static void add_items(){
+    public void add_items(){
         File f = new File(LISTE);
         //checking if this file is already there, otherwise error
         try {//result is ignored because the existence of the file matters only
@@ -53,18 +128,16 @@ public class Einkaufsliste {
         try(
                 BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)){
-            //opening the scanner for user's input
-            Scanner object = new Scanner(System.in);
             do {
                 //asking the user for input
                 System.out.println("Would you like to add something to your grocery list? (If no, then type 'no')");
                 //scanning his answer
-                String item = object.nextLine();
+                String item = scanner.nextLine();
                 //breaking the while loop if the user does not want to add any items
                 if (item.equalsIgnoreCase("no")) { break; }
                 //asking the user how much he wants to add of the item
                 System.out.println("How much of it would you like to add?");
-                String menge = object.nextLine();
+                String menge = scanner.nextLine();
                 //recording those values in the csv file
                 csvPrinter.printRecord(item, menge);
             } while (true);
@@ -73,20 +146,18 @@ public class Einkaufsliste {
             e.printStackTrace();
         }
     }
-    public static void delete_items() {
+    public void delete_items() {
         File f = new File(LISTE);
         //creates array with all ingredients to rewrite the file after deleting an item
         List<String> list = new ArrayList<>();
         //reads csv file
         try ( BufferedReader reader = new BufferedReader(new FileReader(f));
               CSVParser csvParser = CSVParser.parse(reader, CSVFormat.DEFAULT)){
-            //creates scanner for user's input
-            Scanner object = new Scanner(System.in);
             //starts the option to 'delete' an item
             do {
                 //Scanning user's input for deleting an item
                 System.out.println("Would you like to delete something? (If no, then type 'no')");
-                String item = object.nextLine();
+                String item = scanner.nextLine();
                 //breaks while loop if nothing should be deleted
                 if (item.equalsIgnoreCase("no")) { break; }
                 //adds all items and amounts to the array
