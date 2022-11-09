@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -127,7 +128,23 @@ public class Rezeptbuch {
         rezeptBuchWindow.getContentPane().add(suchPanel, BorderLayout.NORTH);
         rezeptBuchWindow.getContentPane().add(auswahlScrollPanel);
         
+        rezeptBuchWindow.validate();
 		rezeptBuchWindow.setVisible(true);
+
+        importButton.addActionListener(e -> {
+            ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Rezepte", "csv", "rezept.csv");
+            chooser.setFileFilter(filter);
+            int returnVal = chooser.showOpenDialog(rezeptBuchWindow);
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+
+                rezepte_temp = load(chooser.getSelectedFile().getPath());
+            }
+            rezepte.addAll(rezepte_temp);
+            reloadRezepte(auswahlPanel, rezepte_temp);
+        });
 
         return true;
     }
@@ -250,11 +267,45 @@ public class Rezeptbuch {
         saveButton.addActionListener(e -> {
             rezept.name = nameField.getText();
             button.setText(rezept.name);
+
+            String per = personenField.getText();
+            if (per.matches("[0-9]+")) {
+                rezept.personen = per;
+            } else {
+                personenField.setText(rezept.personen);
+            }
+
+            String zeit = zeitField.getText();
+            if (per.matches("[0-9][0-9]:[0-9][0-9]:[0-9][0-9]")) {
+                rezept.zeit = zeit;
+            } else {
+                zeitField.setText(rezept.zeit);
+            }
+
+            rezept.zubereitung = zubereitungArea.getText();
+
+            rezept.kategorien = kategorienArea.getText().split(", ");
+            
+            rezept.zutaten = zutatenArea.getText().split("\n");
         });
 
         exportButton.addActionListener(e -> {
             
         });
+    }
+
+    void reloadRezepte(JPanel panel, ArrayList<Rezept> rezepte_temp) {
+        for (Rezept rezept : rezepte_temp) {
+            JButton tempButton = new JButton(rezept.name);
+
+            tempButton.addActionListener(e -> {
+                setupButton(rezept, tempButton);
+            });
+
+            tempButton.setPreferredSize(new Dimension(0, 200));
+            panel.add(tempButton);
+        }
+        rezeptBuchWindow.validate();
     }
 
     boolean save(String pfad) {
