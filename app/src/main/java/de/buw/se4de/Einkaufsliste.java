@@ -13,18 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Einkaufsliste {
-    private static final String LISTE = "liste.csv";
+    private static final String LISTE = "src/main/resources/liste.csv";
 
     public static void einkaufen() {
-        load();
-        write();
-        load();
-        delete();
-        load();
+        print();
+        add_items();
+        print();
+        delete_items();
+        print();
     }
 
-    public static void load() {
-        File f = new File("src/main/resources/"+LISTE);
+    public static void print() {
+        File f = new File(LISTE);
         //opening the reader and parser for the csv file
         try ( BufferedReader reader = new BufferedReader(new FileReader(f));
         CSVParser csvParser = CSVParser.parse(reader, CSVFormat.DEFAULT) ){
@@ -40,8 +40,8 @@ public class Einkaufsliste {
             e.printStackTrace();
         }
     }
-    public static void write(){
-        File f = new File("/Users/anastasiakozlova/Desktop/Koch-App/koch-app/app/src/main/resources/"+LISTE);
+    public static void add_items(){
+        File f = new File(LISTE);
         //checking if this file is already there, otherwise error
         try {//result is ignored because the existence of the file matters only
             f.createNewFile();
@@ -73,11 +73,11 @@ public class Einkaufsliste {
             e.printStackTrace();
         }
     }
-    public static void delete() {
-        File f = new File("src/main/resources/"+LISTE);
+    public static void delete_items() {
+        File f = new File(LISTE);
         //creates array with all ingredients to rewrite the file after deleting an item
         List<String> list = new ArrayList<>();
-        //reads liste.csv
+        //reads csv file
         try ( BufferedReader reader = new BufferedReader(new FileReader(f));
               CSVParser csvParser = CSVParser.parse(reader, CSVFormat.DEFAULT)){
             //creates scanner for user's input
