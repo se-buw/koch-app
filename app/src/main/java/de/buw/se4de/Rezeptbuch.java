@@ -117,6 +117,7 @@ public class Rezeptbuch {
         JTextField suchKategorieTextField = new JTextField();
         JButton suchButton = new JButton("Suchen");
         JButton importButton = new JButton("Importieren");
+        JButton neuButton = new JButton("Neues Rezept");
 
         suchNameTextField.setColumns(30);
         suchKategorieTextField.setColumns(30);
@@ -129,6 +130,7 @@ public class Rezeptbuch {
         suchPanel.add(suchKategorieTextField);
         suchPanel.add(suchButton);
         suchPanel.add(importButton);
+        suchPanel.add(neuButton);
         
         rezeptBuchWindow.getContentPane().add(suchPanel, BorderLayout.NORTH);
         rezeptBuchWindow.getContentPane().add(auswahlScrollPanel);
@@ -152,6 +154,16 @@ public class Rezeptbuch {
                 rezepte_temp = load(chooser.getSelectedFile().getPath());
             }
             rezepte.addAll(rezepte_temp);
+            addRezepte(auswahlPanel, rezepte_temp);
+            save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+        });
+
+        neuButton.addActionListener(e -> {
+            Rezept neu = new Rezept("neu", new String[]{"Zutaten"}, "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung");
+
+            ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
+            rezepte_temp.add(neu);
+            rezepte.add(neu);
             addRezepte(auswahlPanel, rezepte_temp);
             save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
