@@ -219,7 +219,7 @@ public class Rezeptbuch {
         is_editable = false;
         
         rezeptWindow = new JFrame(rezept.name);
-        rezeptWindow.setSize(500, 720);
+        rezeptWindow.setSize(800, 900);
         rezeptWindow.setResizable(false);
 
         rezeptWindow.addWindowListener(new WindowAdapter() {
@@ -250,6 +250,9 @@ public class Rezeptbuch {
         JLabel zubereitungLabel = new JLabel("Zubereitung", SwingConstants.CENTER);
         JTextArea zubereitungArea = new JTextArea();
 
+        JScrollPane zubScroll = new JScrollPane(zubereitungArea);
+        JScrollPane zutScroll = new JScrollPane(zutatenArea);
+
         nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, nameField.getPreferredSize().height));
         personenField.setMaximumSize(new Dimension(Integer.MAX_VALUE, personenField.getPreferredSize().height));
         zeitField.setMaximumSize(new Dimension(Integer.MAX_VALUE, zeitField.getPreferredSize().height));
@@ -276,13 +279,13 @@ public class Rezeptbuch {
         rezeptPanel.add(kategorienLabel);
         rezeptPanel.add(kategorienArea);
         rezeptPanel.add(zutatenLabel);
-        rezeptPanel.add(zutatenArea);
+        rezeptPanel.add(zutScroll);
         rezeptPanel.add(personenLabel);
         rezeptPanel.add(personenField);
         rezeptPanel.add(zeitLabel);
         rezeptPanel.add(zeitField);
         rezeptPanel.add(zubereitungLabel);
-        rezeptPanel.add(zubereitungArea);
+        rezeptPanel.add(zubScroll);
 
 
         JPanel funktionenPanel = new JPanel();
