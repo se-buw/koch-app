@@ -16,4 +16,8 @@ public class Rezept {
         this.zeit = zeit;
         this.zubereitung = zubereitung;
     }
+
+    public String toString(){ 
+        return name;  
+    }  
 }

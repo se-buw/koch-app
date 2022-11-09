@@ -117,6 +117,7 @@ public class Rezeptbuch {
         JTextField suchKategorieTextField = new JTextField();
         JButton suchButton = new JButton("Suchen");
         JButton importButton = new JButton("Importieren");
+        JButton exportButton = new JButton("Exportieren");
         JButton neuButton = new JButton("Neues Rezept");
 
         suchNameTextField.setColumns(30);
@@ -130,6 +131,7 @@ public class Rezeptbuch {
         suchPanel.add(suchKategorieTextField);
         suchPanel.add(suchButton);
         suchPanel.add(importButton);
+        suchPanel.add(exportButton);
         suchPanel.add(neuButton);
         
         rezeptBuchWindow.getContentPane().add(suchPanel, BorderLayout.NORTH);
@@ -145,8 +147,7 @@ public class Rezeptbuch {
         importButton.addActionListener(e -> {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             JFileChooser chooser = new JFileChooser("src/main/resources");
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Rezepte", "csv", "rezept.csv");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
             chooser.setFileFilter(filter);
             int returnVal = chooser.showOpenDialog(rezeptBuchWindow);
             if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -156,6 +157,43 @@ public class Rezeptbuch {
             rezepte.addAll(rezepte_temp);
             addRezepte(auswahlPanel, rezepte_temp);
             save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+        });
+
+        exportButton.addActionListener(e -> {
+            JFrame exportFrame = new JFrame("Exportieren");
+            exportFrame.setSize(600, 600);
+            exportFrame.setResizable(false);
+
+            DefaultListModel<Rezept> listMod = new DefaultListModel<Rezept>();
+
+            listMod.addAll(rezepte);
+
+            JList<Rezept> list = new JList<Rezept>(listMod);
+            list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+            JScrollPane listScroller = new JScrollPane(list);
+            listScroller.setPreferredSize(new Dimension(600, 600));
+
+            JButton eButton = new JButton("Exportieren");
+
+            exportFrame.getContentPane().add(listScroller);
+            exportFrame.getContentPane().add(eButton, BorderLayout.SOUTH);
+
+            exportFrame.validate();
+		    exportFrame.setVisible(true);
+
+            eButton.addActionListener(f -> {
+                ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>(list.getSelectedValuesList());
+                JFileChooser chooser = new JFileChooser("src/main/resources");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
+                chooser.setFileFilter(filter);
+                chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                chooser.setSelectedFile(new File("export.csv"));
+                int returnVal = chooser.showSaveDialog(exportFrame);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    save(chooser.getSelectedFile().getPath(), rezepte_temp);
+                    exportFrame.dispatchEvent(new WindowEvent(exportFrame, WindowEvent.WINDOW_CLOSING));
+                }
+            });
         });
 
         neuButton.addActionListener(e -> {
@@ -318,8 +356,7 @@ public class Rezeptbuch {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             rezepte_temp.add(rezept);
             JFileChooser chooser = new JFileChooser("src/main/resources");
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Rezepte", "csv", "rezept.csv");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
             chooser.setFileFilter(filter);
             chooser.setDialogType(JFileChooser.SAVE_DIALOG);
             chooser.setSelectedFile(new File(rezept.name + ".csv"));
