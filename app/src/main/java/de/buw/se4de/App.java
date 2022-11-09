@@ -3,47 +3,63 @@
  */
 package de.buw.se4de;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Scanner;
+import javax.swing.*;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-
-import static de.buw.se4de.Einkaufsliste.einkaufen;
+import java.awt.*;
 
 public class App {
-	public String getGreeting() {
-		String result = "";
-		try (Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/book.csv"));
-				@SuppressWarnings("deprecation")
-				CSVParser csvParser = new CSVParser(reader,
-						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
-			for (CSVRecord csvRecord : csvParser) {
-				String name = csvRecord.get("author");
-				result += "Hello " + name + "!\n";
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		System.out.println("Enter your name:");
-		Scanner scanner = new Scanner(System.in);
-		String inputString = scanner.nextLine();
-		System.out.println("Hello " + inputString + "!");
-		scanner.close();
-
-		return result;
-	}
+	static Rezeptbuch buch;
+	// static Einkaufsliste liste;
 
 	public static void main(String[] args) {
 		// System.out.println(new App().getGreeting());
-		//Rezeptbuch b = new Rezeptbuch();
-		//b.init();
-		einkaufen();
+		buch = new Rezeptbuch();
+
+		setupWindow();
+	}
+
+	static boolean setupWindow() {
+		JFrame mainWindow = new JFrame("Koch-App");
+		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindow.setSize(800, 600);
+		mainWindow.setResizable(false);
+		JPanel mainPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+		JPanel rezeptPanel = new JPanel(new BorderLayout());
+		JLabel rezeptLabel = new JLabel("Rezeptbuch", SwingConstants.CENTER);
+		JButton rezeptButton = new JButton("Rezeptbuch öffnen");
+		JPanel einkaufslistePanel = new JPanel(new BorderLayout());
+		JLabel einkaufslisteLabel = new JLabel("Einkaufsliste", SwingConstants.CENTER);
+		JButton einkaufslisteButton = new JButton("Einkaufsliste öffnen");
+
+		rezeptPanel.add(rezeptLabel, BorderLayout.NORTH);
+		rezeptPanel.add(rezeptButton, BorderLayout.CENTER);
+
+		einkaufslistePanel.add(einkaufslisteLabel, BorderLayout.NORTH);
+		einkaufslistePanel.add(einkaufslisteButton, BorderLayout.CENTER);
+
+		mainPanel.add(rezeptPanel);
+		mainPanel.add(einkaufslistePanel);
+
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		mainWindow.getContentPane().add(mainPanel);
+
+		setupButtons(rezeptButton, einkaufslisteButton);
+
+		mainWindow.setVisible(true);
+		mainWindow.toFront();
+		mainWindow.requestFocus();
+
+		return true;
+	}
+
+	static boolean setupButtons(JButton rButton, JButton eButton) {
+		rButton.addActionListener(e -> {
+			JFrame rezeptBuchWindow = buch.init();
+			rezeptBuchWindow.toFront();
+        	rezeptBuchWindow.requestFocus();
+		});
+
+		return true;
 	}
 }
