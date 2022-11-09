@@ -111,8 +111,8 @@ public class Einkaufsliste {
                         }
                         //removes the item and amount from the array
                         int k = list.indexOf(item);
-                        list.remove(list.get(k));
-                        list.remove(list.get(k+1));
+                        list.remove(k);
+                        list.remove(k);
                     }
                 }
             } while (true);
