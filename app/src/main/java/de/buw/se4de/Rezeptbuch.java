@@ -131,6 +131,10 @@ public class Rezeptbuch {
         rezeptBuchWindow.validate();
 		rezeptBuchWindow.setVisible(true);
 
+        suchButton.addActionListener(e -> {
+            showSearch(auswahlPanel, suchNameTextField.getText(),suchKategorieTextField.getText());
+        });
+
         importButton.addActionListener(e -> {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             JFileChooser chooser = new JFileChooser();
@@ -143,7 +147,7 @@ public class Rezeptbuch {
                 rezepte_temp = load(chooser.getSelectedFile().getPath());
             }
             rezepte.addAll(rezepte_temp);
-            reloadRezepte(auswahlPanel, rezepte_temp);
+            addRezepte(auswahlPanel, rezepte_temp);
         });
 
         return true;
@@ -294,7 +298,7 @@ public class Rezeptbuch {
         });
     }
 
-    void reloadRezepte(JPanel panel, ArrayList<Rezept> rezepte_temp) {
+    void addRezepte(JPanel panel, ArrayList<Rezept> rezepte_temp) {
         for (Rezept rezept : rezepte_temp) {
             JButton tempButton = new JButton(rezept.name);
 
@@ -305,7 +309,34 @@ public class Rezeptbuch {
             tempButton.setPreferredSize(new Dimension(0, 200));
             panel.add(tempButton);
         }
-        rezeptBuchWindow.validate();
+        rezeptBuchWindow.revalidate();
+        rezeptBuchWindow.repaint();
+    }
+
+    boolean find_kategorie(Rezept rezept, String kategorien) {
+        for (String kategorie : kategorien.split(",")) {
+            for (String gibt : rezept.kategorien) {
+                if (kategorie.toLowerCase().equals(gibt.toLowerCase()))
+                    return true;
+            }
+        }
+        
+        return false;
+    }
+
+    void showSearch(JPanel panel, String text, String kategorie) {
+        panel.removeAll();
+        panel.revalidate();
+
+        ArrayList<Rezept> temp = new ArrayList<Rezept>();
+        for (Rezept rezept : rezepte) {
+            boolean found_name = rezept.name.toLowerCase().contains(text.toLowerCase()) || text.length() == 0;
+            boolean found_kategorie = find_kategorie(rezept, kategorie) || kategorie.length() == 0;
+            if (found_name && found_kategorie)
+                temp.add(rezept);
+        }
+
+        addRezepte(panel, temp);
     }
 
     boolean save(String pfad) {
