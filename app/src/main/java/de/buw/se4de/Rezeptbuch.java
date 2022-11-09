@@ -2,8 +2,12 @@ package de.buw.se4de;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import java.nio.charset.StandardCharsets;
 
 import java.util.ArrayList;
 
@@ -18,6 +22,7 @@ import java.awt.event.WindowEvent;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.csv.CSVPrinter;
 
 public class Rezeptbuch {
 
@@ -47,7 +52,7 @@ public class Rezeptbuch {
 
     ArrayList<Rezept> load(String pfad) {
         ArrayList<Rezept> temp = new ArrayList<Rezept>();
-		try (Reader reader = Files.newBufferedReader(Paths.get(pfad));
+		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
 			@SuppressWarnings("deprecation")
 			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
                 for (CSVRecord csvRecord : csvParser) {
@@ -78,7 +83,7 @@ public class Rezeptbuch {
         rezeptBuchWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                save(path);
+                save(path, rezepte);
                 unload();
             }
         });
@@ -137,7 +142,7 @@ public class Rezeptbuch {
 
         importButton.addActionListener(e -> {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
-            JFileChooser chooser = new JFileChooser();
+            JFileChooser chooser = new JFileChooser("src/main/resources");
             FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "Rezepte", "csv", "rezept.csv");
             chooser.setFileFilter(filter);
@@ -148,6 +153,7 @@ public class Rezeptbuch {
             }
             rezepte.addAll(rezepte_temp);
             addRezepte(auswahlPanel, rezepte_temp);
+            save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
         return true;
@@ -170,6 +176,7 @@ public class Rezeptbuch {
             @Override
             public void windowClosing(WindowEvent e) {
                 rezept_offen = false;
+                save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
             }
         });
 
@@ -291,10 +298,23 @@ public class Rezeptbuch {
             rezept.kategorien = kategorienArea.getText().split(", ");
             
             rezept.zutaten = zutatenArea.getText().split("\n");
+
+            save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
         exportButton.addActionListener(e -> {
-            
+            ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
+            rezepte_temp.add(rezept);
+            JFileChooser chooser = new JFileChooser("src/main/resources");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Rezepte", "csv", "rezept.csv");
+            chooser.setFileFilter(filter);
+            chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+            chooser.setSelectedFile(new File(rezept.name + ".csv"));
+            int returnVal = chooser.showSaveDialog(rezeptWindow);
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                save(chooser.getSelectedFile().getPath(), rezepte_temp);
+            }
         });
     }
 
@@ -339,8 +359,18 @@ public class Rezeptbuch {
         addRezepte(panel, temp);
     }
 
-    boolean save(String pfad) {
+    boolean save(String pfad, ArrayList<Rezept> rez) {
 
+        CSVFormat format = CSVFormat.DEFAULT;
+        format.builder().setHeader("name", "zutaten", "personen", "kategorien", "zeit", "zubereitung");
+        try (
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get(pfad), StandardCharsets.UTF_8) ;
+            CSVPrinter printer = new CSVPrinter(writer, format);
+        ) {
+            printer.printRecords(getRecords(rez));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -351,5 +381,19 @@ public class Rezeptbuch {
         running = false;
         rezeptBuchWindow = null;
         rezeptWindow = null;
+    }
+
+    ArrayList<String[]> getRecords(ArrayList<Rezept> rez) {
+        ArrayList<String[]> records = new ArrayList<String[]>();
+
+        String[] header = {"name", "zutaten", "personen", "kategorien", "zeit", "zubereitung"};
+        records.add(header);
+
+        for (Rezept rezept : rez) {
+            String[] record = {rezept.name, String.join(";", rezept.zutaten), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";")};
+            records.add(record);
+        }
+
+        return records;
     }
 }
