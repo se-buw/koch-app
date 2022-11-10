@@ -17,6 +17,7 @@ public class Rezept {
         this.zubereitung = zubereitung;
     }
 
+    // Wir brauchen die toString() Methode um die Namen im Listenmodus für den Export anzuzeigen
     public String toString(){ 
         return name;  
     }  

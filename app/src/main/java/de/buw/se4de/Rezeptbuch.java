@@ -38,6 +38,7 @@ public class Rezeptbuch {
     private boolean is_editable = false;
 
     JFrame init() {
+        // wenn schon Rezeptbuch offen ist wollen wir kein zweites
         if (running) return rezeptBuchWindow;
         running = true;
         System.out.println("Rezeptbuch geöffnet");
@@ -50,6 +51,7 @@ public class Rezeptbuch {
         return rezeptBuchWindow;
     }
 
+    // nimmt den pfad zu einer CSV Datei und gibt eine Liste mit Rezepeten zurück
     ArrayList<Rezept> load(String pfad) {
         ArrayList<Rezept> temp = new ArrayList<Rezept>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
@@ -75,11 +77,14 @@ public class Rezeptbuch {
         return temp;
     } 
 
+    // Rezeptbuchfenster und Buttons
     boolean initWindow() {
         rezeptBuchWindow = new JFrame("Rezeptbuch");
 		rezeptBuchWindow.setSize(1280, 720);
         rezeptBuchWindow.setResizable(false);
 
+        // wenn das Rezeptbuch geschlossen wird speichern wir die geänderten Daten
+        // und setzen das Rezeptbuch zu !running zurück
         rezeptBuchWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -146,6 +151,7 @@ public class Rezeptbuch {
 
         importButton.addActionListener(e -> {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
+            // JFileChooser erlaubt es uns leicht einen Pfad zu erhalten
             JFileChooser chooser = new JFileChooser("src/main/resources");
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
             chooser.setFileFilter(filter);
@@ -156,6 +162,8 @@ public class Rezeptbuch {
             }
             rezepte.addAll(rezepte_temp);
             addRezepte(auswahlPanel, rezepte_temp);
+            // an mehereren Orten speichern wir in eine alternative Datei
+            // diese wird derzeit nicht benutzt, war aber sehr hilfreich bei Fehlermeldungen
             save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
@@ -209,6 +217,7 @@ public class Rezeptbuch {
         return true;
     }
 
+    // lässt die Rezeptknöpfe ein extra Rezeptfenster öffnen
     void setupButton(Rezept rezept, JButton button) {
         if (rezept_offen) {
             rezeptWindow.toFront();
@@ -370,6 +379,7 @@ public class Rezeptbuch {
         });
     }
 
+    // fügt Rezeptknöpfe hinzu
     void addRezepte(JPanel panel, ArrayList<Rezept> rezepte_temp) {
         for (Rezept rezept : rezepte_temp) {
             JButton tempButton = new JButton(rezept.name);
@@ -385,6 +395,7 @@ public class Rezeptbuch {
         rezeptBuchWindow.repaint();
     }
 
+    // Hilfsmethode um herauszufinden ob sich eine Kategorie im Rezept befindet
     boolean find_kategorie(Rezept rezept, String kategorien) {
         for (String kategorie : kategorien.split(",")) {
             for (String gibt : rezept.kategorien) {
@@ -396,6 +407,7 @@ public class Rezeptbuch {
         return false;
     }
 
+    // ersetzt die Rezeptknöpfe mit den die in der Suche gezeigt werden sollen
     void showSearch(JPanel panel, String text, String kategorie) {
         panel.removeAll();
         panel.revalidate();
@@ -411,6 +423,7 @@ public class Rezeptbuch {
         addRezepte(panel, temp);
     }
 
+    // speichert die Liste der Rezepte als CSV Datei im angegebenen Pfad
     boolean save(String pfad, ArrayList<Rezept> rez) {
 
         CSVFormat format = CSVFormat.DEFAULT;
@@ -426,6 +439,7 @@ public class Rezeptbuch {
         return true;
     }
 
+    // setzt die Klasse zurück um Probleme mit wiederholtem Öffnen zu vermeiden
     void unload() {
         rezepte.clear();
         if (rezeptWindow != null)
@@ -435,6 +449,7 @@ public class Rezeptbuch {
         rezeptWindow = null;
     }
 
+    // Hilfsmethode um Rezept in Stringform zu verwandeln und abzuspeichern
     ArrayList<String[]> getRecords(ArrayList<Rezept> rez) {
         ArrayList<String[]> records = new ArrayList<String[]>();
 
