@@ -27,17 +27,17 @@ public class App {
 		JPanel mainPanel = new JPanel(new GridLayout(0, 2, 10, 10));
 		JPanel rezeptPanel = new JPanel(new BorderLayout());
 		JLabel rezeptLabel = new JLabel("Rezeptbuch", SwingConstants.CENTER);
-		JButton rezeptButton = new JButton("Rezeptbuch öffnen");
+		JButton rezeptButton = new JButton("Rezeptbuch \u00F6ffnen");
 		JPanel einkaufslistePanel = new JPanel(new GridLayout(3, 1, 10, 10));
 		JPanel einkaufslisteGUIPanel = new JPanel(new BorderLayout());
 		JPanel einkaufslisteCLIPanel = new JPanel(new BorderLayout());
 		JPanel einkaufslisteCLISubPanel = new JPanel(new GridLayout(1, 0, 10, 10));
 		JLabel einkaufslisteGUILabel = new JLabel("Einkaufsliste GUI", SwingConstants.CENTER);
 		JLabel einkaufslisteCLILabel = new JLabel("Einkaufsliste CLI", SwingConstants.CENTER);
-		JButton einkaufslisteGUIButton = new JButton("Einkaufsliste öffnen");
-		JButton einkaufslisteCLIPrintButton = new JButton("Einkaufsliste Anzeigen");
-		JButton einkaufslisteCLIAddButton = new JButton("Artikel hinzufügen");
-		JButton einkaufslisteCLIDeleteButton = new JButton("Artikel entfernen");
+		JButton einkaufslisteGUIButton = new JButton("Einkaufsliste \u00F6ffnen");
+		JButton einkaufslisteCLIPrintButton = new JButton("Einkaufsliste \n anzeigen");
+		JButton einkaufslisteCLIAddButton = new JButton("Artikel \n hinzuf\u00FCgen");
+		JButton einkaufslisteCLIDeleteButton = new JButton("Artikel \n entfernen");
 
 		rezeptPanel.add(rezeptLabel, BorderLayout.NORTH);
 		rezeptPanel.add(rezeptButton, BorderLayout.CENTER);
