@@ -27,7 +27,7 @@ import org.apache.commons.csv.CSVPrinter;
 public class Rezeptbuch {
 
     private static final String path = "./app/src/main/resources/rezeptbuch.csv";
-    private ArrayList<Rezept> rezepte = new ArrayList<Rezept>();
+    private ArrayList<Rezept> rezepte = new ArrayList<>();
 
     private JFrame rezeptBuchWindow;
     private JFrame rezeptWindow;
@@ -78,7 +78,7 @@ public class Rezeptbuch {
     } 
 
     // Rezeptbuchfenster und Buttons
-    boolean initWindow() {
+    void initWindow() {
         rezeptBuchWindow = new JFrame("Rezeptbuch");
 		rezeptBuchWindow.setSize(1280, 720);
         rezeptBuchWindow.setResizable(false);
@@ -211,9 +211,8 @@ public class Rezeptbuch {
             rezepte_temp.add(neu);
             rezepte.add(neu);
             addRezepte(auswahlPanel, rezepte_temp);
-            save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+            save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
-        return true;
     }
 
     // lässt die Rezeptknöpfe ein extra Rezeptfenster öffnen
@@ -449,7 +448,7 @@ public class Rezeptbuch {
     }
 
     // speichert die Liste der Rezepte als CSV Datei im angegebenen Pfad
-    boolean save(String pfad, ArrayList<Rezept> rez) {
+    void save(String pfad, ArrayList<Rezept> rez) {
 
         CSVFormat format = CSVFormat.DEFAULT;
         format.builder().setHeader("Name", "Zutaten", "Personen", "Kategorien", "Zeit", "Zubereitung", "Rating");
@@ -461,7 +460,6 @@ public class Rezeptbuch {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
     }
 
     // setzt die Klasse zurück um Probleme mit wiederholtem Öffnen zu vermeiden

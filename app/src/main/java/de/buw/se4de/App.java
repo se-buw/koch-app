@@ -19,7 +19,7 @@ public class App {
 		setupWindow();
 	}
 
-	static boolean setupWindow() {
+	static void setupWindow() {
 		JFrame mainWindow = new JFrame("Koch-App");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setSize(1100, 600);
@@ -68,10 +68,9 @@ public class App {
 		mainWindow.toFront();
 		mainWindow.requestFocus();
 
-		return true;
 	}
 
-	static boolean setupButtons(JButton rButton, JButton eGUIButton, JButton eCLIPButton, JButton eCLIAButton, JButton eCLIDButton) {
+	static void setupButtons(JButton rButton, JButton eGUIButton, JButton eCLIPButton, JButton eCLIAButton, JButton eCLIDButton) {
 		rButton.addActionListener(e -> {
 			JFrame rezeptBuchWindow = buch.init();
 			rezeptBuchWindow.toFront();
@@ -96,6 +95,5 @@ public class App {
 			liste.delete_items();
 		});
 
-		return true;
 	}
 }

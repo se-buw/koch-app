@@ -23,7 +23,7 @@ import java.util.List;
 public class Einkaufsliste {
     private static final String LISTE = "./app/src/main/resources/liste.csv";
 
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     private boolean running = false;
     private JFrame eWindow;
