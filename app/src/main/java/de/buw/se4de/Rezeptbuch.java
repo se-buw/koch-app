@@ -398,8 +398,10 @@ public class Rezeptbuch {
                     possibilities,
                     "Gut");
             if ((rating != null) && (rating.length() > 0)) {
-                rezept.rating = rating;
+
             }
+            rezept.rating = rating;
+            ratingField.setText(rating);
         });
     }
 
@@ -477,7 +479,7 @@ public class Rezeptbuch {
     ArrayList<String[]> getRecords(ArrayList<Rezept> rez) {
         ArrayList<String[]> records = new ArrayList<String[]>();
 
-        String[] header = {"name", "zutaten", "personen", "kategorien", "zeit", "zubereitung", "bewertung"};
+        String[] header = {"name", "zutaten", "personen", "kategorien", "zeit", "zubereitung", "rating"};
         records.add(header);
 
         for (Rezept rezept : rez) {
