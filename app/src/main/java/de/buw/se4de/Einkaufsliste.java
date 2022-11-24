@@ -27,14 +27,14 @@ public class Einkaufsliste {
 
     private boolean running = false;
     private JFrame eWindow;
-
+    /*
     public void einkaufen() {
         print();
         add_items();
         print();
         delete_items();
         print();
-    }
+    }*/
 
     public JFrame init() {
         if (running) return eWindow;
@@ -115,6 +115,8 @@ public class Einkaufsliste {
             e.printStackTrace();
         }
     }
+
+    //Einkaufslistenelemente hinzufügen
     public void add_items(){
         File f = new File(LISTE);
         //checking if this file is already there, otherwise error
@@ -146,6 +148,8 @@ public class Einkaufsliste {
             e.printStackTrace();
         }
     }
+
+    //Einkaufslistenelemente löschen
     public void delete_items() {
         File f = new File(LISTE);
         //creates array with all ingredients to rewrite the file after deleting an item

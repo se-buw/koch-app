@@ -55,6 +55,7 @@ public class Rezeptbuch {
     // nimmt den pfad zu einer CSV Datei und gibt eine Liste mit Rezepten zurück
     ArrayList<Rezept> load(String pfad) {
         ArrayList<Rezept> temp = new ArrayList<Rezept>();
+        ArrayList<Ingredient> ing = new ArrayList<>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
 			@SuppressWarnings("deprecation")
 			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
@@ -66,9 +67,9 @@ public class Rezeptbuch {
                     String zeit = csvRecord.get("Zeit");
                     String zubereitung = csvRecord.get("Zubereitung").replaceAll(";", "\n");
 
-<<<<<<< Updated upstream
+
                     String[] zutaten = zutatenVoll.split(";");
-=======
+
                     String[] zutatenString = zutatenVoll.split(";");
 
                     // we go through the strings in the csv file and parse out the amount, units and names of all ingredients and add them to our list
@@ -78,7 +79,7 @@ public class Rezeptbuch {
                         Ingredient tempIngredient = new Ingredient(value, ingredientData[1], ingredientData[2]);
                         zutaten.add(tempIngredient);
                     }*/
->>>>>>> Stashed changes
+
                     String[] kategorien = kategorienVoll.split(";");
 
                     Rezept rezept = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung);
@@ -388,13 +389,13 @@ public class Rezeptbuch {
 
             rezept.kategorien = kategorienArea.getText().split(", ");
 
-<<<<<<< Updated upstream
+
             rezept.zutaten = zutatenArea.getText().split("\n");
-=======
+
             String[] temp = zutatenArea.getText().split("\n"); //
 
             parseRecipeIngredients(rezept, temp);
->>>>>>> Stashed changes
+
 
             save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
