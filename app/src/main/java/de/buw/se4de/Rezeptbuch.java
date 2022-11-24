@@ -318,11 +318,13 @@ public class Rezeptbuch {
         JButton saveButton = new JButton("Speichern");
         JButton exportButton = new JButton("Exportieren");
         JButton ratingButton = new JButton("Bewerten");
+        JButton adjustmentButton = new JButton("Portionen Anpassen");
 
         funktionenPanel.add(editButton);
         funktionenPanel.add(saveButton);
         funktionenPanel.add(exportButton);
         funktionenPanel.add(ratingButton);
+        funktionenPanel.add(adjustmentButton);
 
         mainPanel.add(rezeptPanel);
         mainPanel.add(funktionenPanel, BorderLayout.NORTH);
@@ -418,6 +420,16 @@ public class Rezeptbuch {
             }
             rezept.rating = rating;
             ratingField.setText(rating);
+        });
+
+        adjustmentButton.addActionListener(e -> {
+            var desiredPortions = JOptionPane.showInputDialog("Wie viele Portionen wollen Sie haben?");
+            int portions = Integer.parseInt(desiredPortions);
+            for (Ingredient ingredient : rezept.ingredients ) {
+                ingredient.adjustAmount(portions, Integer.parseInt(rezept.personen));
+            }
+            rezeptBuchWindow.revalidate();
+            rezeptBuchWindow.repaint();
         });
     }
 
