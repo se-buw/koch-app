@@ -259,7 +259,7 @@ public class Rezeptbuch {
         JTextField ratingField = new JTextField();
         JLabel kategorienLabel = new JLabel("Kategorien", SwingConstants.CENTER);
         JTextField kategorienArea = new JTextField();
-        JLabel zutatenLabel = new JLabel("Zutaten", SwingConstants.CENTER);
+        JLabel zutatenLabel = new JLabel("Zutaten (bitte in dem Muster eingeben: ZahlMenge Name)", SwingConstants.CENTER);
         JTextArea zutatenArea = new JTextArea();
         JLabel personenLabel = new JLabel("Personen Anzahl", SwingConstants.CENTER);
         JTextField personenField = new JTextField();
