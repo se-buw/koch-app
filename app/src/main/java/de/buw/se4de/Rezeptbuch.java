@@ -66,10 +66,23 @@ public class Rezeptbuch {
                     String zeit = csvRecord.get("Zeit");
                     String zubereitung = csvRecord.get("Zubereitung").replaceAll(";", "\n");
 
+<<<<<<< Updated upstream
                     String[] zutaten = zutatenVoll.split(";");
+=======
+                    String[] zutatenString = zutatenVoll.split(";");
+
+                    // we go through the strings in the csv file and parse out the amount, units and names of all ingredients and add them to our list
+                    /*for (String ingredientString : zutatenString) {
+                        String[] ingredientData = ingredientString.split("/");
+                        int value = Integer.parseInt(ingredientData[0]);
+                        Ingredient tempIngredient = new Ingredient(value, ingredientData[1], ingredientData[2]);
+                        zutaten.add(tempIngredient);
+                    }*/
+>>>>>>> Stashed changes
                     String[] kategorien = kategorienVoll.split(";");
 
                     Rezept rezept = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung);
+                    parseRecipeIngredients(rezept, zutatenString);
                     temp.add(rezept);
                 }
 		} catch (IOException e) {
@@ -375,7 +388,13 @@ public class Rezeptbuch {
 
             rezept.kategorien = kategorienArea.getText().split(", ");
 
+<<<<<<< Updated upstream
             rezept.zutaten = zutatenArea.getText().split("\n");
+=======
+            String[] temp = zutatenArea.getText().split("\n"); //
+
+            parseRecipeIngredients(rezept, temp);
+>>>>>>> Stashed changes
 
             save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
@@ -440,6 +459,31 @@ public class Rezeptbuch {
         }
         
         return false;
+    }
+
+    Rezept parseRecipeIngredients(Rezept rezept, String[] temp) {
+        for (String ingredientString : temp) {
+            // gets length of integers at beginning of string, so that we can parse out amount + units
+            // example: 400g Mehl
+            int res = 0;
+            // this loop will check how many of the first n characters are part of an integer and return the number
+            // example: res = 400 at the end of the loop
+            for (int i=0; i < ingredientString.length(); i++) {
+                char c = ingredientString.charAt(i);
+                if (c < '0' || c > '9') continue;
+                res = res * 10 + (c - '0');
+            }
+            // we split the string at all empty spaces to separate the amount+unit from the name part
+            // example: substrings would be '400g' + 'Mehl'
+            String[] subIngredients = ingredientString.split(" ");
+            // We create a new ingredient to add to the recipe, with the following
+            rezept.ingredients.add(new Ingredient(res, // the number at the beginning of the first string, in our example '400'
+                    ingredientString.substring(String.valueOf(res).length(),subIngredients[0].length()), // we add the substring of the amount+unit that denotes the unit.
+                    // we do this by creating a substring of '400g' starting at the end of the length of the integer previously determined, up to the end of the actual string
+                    // essentially everything past the last '0' in 400 and up to and including the 'g'. If someone were to write '400gramm' the entire word 'gramm' would be parsed
+                    subIngredients[1])); // the second part of the split string, which would be 'Mehl'
+        }
+        return rezept;
     }
 
     // ersetzt die Rezeptknöpfe mit den die in der Suche gezeigt werden sollen
