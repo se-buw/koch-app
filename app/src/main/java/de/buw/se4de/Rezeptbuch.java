@@ -521,7 +521,7 @@ public class Rezeptbuch {
         records.add(header);
 
         for (Rezept rezept : rez) {
-            String[] record = {rezept.name, String.join(";", rezept.ingredients.toString()), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
+            String[] record = {rezept.name, String.join(";", rezept.ingredientString()), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
             records.add(record);
         }
 

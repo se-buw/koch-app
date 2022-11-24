@@ -26,4 +26,12 @@ public class Rezept {
     public String toString(){
         return name;
     }
+
+    public String ingredientString() {
+        String allStrings = "";
+        for (Ingredient ingredient : ingredients) {
+            allStrings.concat(ingredient.toString() + ";");
+        }
+        return allStrings;
+    }
 }

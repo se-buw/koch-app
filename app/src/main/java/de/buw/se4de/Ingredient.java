@@ -3,6 +3,9 @@ package de.buw.se4de;
 // The intent of this class is to allow us to dynamically adjust the amount of ingredients needed to create a recipe
 // This way the user can simply enter how many portions they would like, and the program adjusts the amounts accordingly
 
+import java.util.ArrayList;
+import java.util.List;
+
 // IMPORTANT: for conversion to work, ingredients in csv must be written in 'amount/unit/name;' format and
 // edited ingredients must be written in 'amountunit name' format
 public class Ingredient {
