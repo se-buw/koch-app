@@ -295,7 +295,7 @@ public class Rezeptbuch {
         zubereitungArea.setText(rezept.zubereitung);
         zutatenArea.setText(Arrays.toString(rezept.ingredients.toArray()).replace("[",
                 "").replace("]", "").replace(",", "\n"));
-        kategorienArea.setText(String.join(", ", rezept.kategorien));
+        kategorienArea.setText(String.join(",", rezept.kategorien));
 
         rezeptPanel.add(nameLabel);
         rezeptPanel.add(nameField);
@@ -379,7 +379,7 @@ public class Rezeptbuch {
 
             rezept.zubereitung = zubereitungArea.getText();
 
-            rezept.kategorien = kategorienArea.getText().split(", ");
+            rezept.kategorien = kategorienArea.getText().split(",");
 
             String[] temp = zutatenArea.getText().split("\n"); //
 

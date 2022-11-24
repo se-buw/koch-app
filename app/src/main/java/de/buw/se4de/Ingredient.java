@@ -9,13 +9,13 @@ import java.util.List;
 // IMPORTANT: for conversion to work, ingredients in csv must be written in 'amount/unit/name;' format and
 // edited ingredients must be written in 'amountunit name' format
 public class Ingredient {
-    float amount;
+    int amount;
     String unit;
     String name;
 
     // allows saving and parsing of ingredient names and amounts
 
-    public Ingredient(float amount, String unit, String name) {
+    public Ingredient(int amount, String unit, String name) {
         this.amount = amount;
         this.unit = unit;
         this.name = name;
@@ -27,7 +27,7 @@ public class Ingredient {
     public void adjustAmount(int desiredServings, int recipeServings) {      // we pass the amount the user desires, as well as the servings the original recipe can generate into the function
         // just to be safe we ensure that the user wants a non-zero number of servings
         if (desiredServings > 0) {
-            float singleServing = amount / recipeServings;
+            int singleServing = amount / recipeServings;
             amount = singleServing * desiredServings;
         }
     }
