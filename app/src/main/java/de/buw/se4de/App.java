@@ -22,7 +22,7 @@ public class App {
 	static boolean setupWindow() {
 		JFrame mainWindow = new JFrame("Koch-App");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setSize(800, 600);
+		mainWindow.setSize(1100, 600);
 		mainWindow.setResizable(false);
 		JPanel mainPanel = new JPanel(new GridLayout(0, 2, 10, 10));
 		JPanel rezeptPanel = new JPanel(new BorderLayout());
