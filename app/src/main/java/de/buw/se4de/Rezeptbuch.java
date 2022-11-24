@@ -451,7 +451,7 @@ public class Rezeptbuch {
     boolean save(String pfad, ArrayList<Rezept> rez) {
 
         CSVFormat format = CSVFormat.DEFAULT;
-        format.builder().setHeader("name", "zutaten", "personen", "kategorien", "zeit", "zubereitung");
+        format.builder().setHeader("name", "zutaten", "personen", "kategorien", "zeit", "zubereitung", "rating");
         try (
             BufferedWriter writer = Files.newBufferedWriter(Paths.get(pfad), StandardCharsets.UTF_8) ;
             CSVPrinter printer = new CSVPrinter(writer, format);
@@ -477,11 +477,11 @@ public class Rezeptbuch {
     ArrayList<String[]> getRecords(ArrayList<Rezept> rez) {
         ArrayList<String[]> records = new ArrayList<String[]>();
 
-        String[] header = {"name", "zutaten", "personen", "kategorien", "zeit", "zubereitung"};
+        String[] header = {"name", "zutaten", "personen", "kategorien", "zeit", "zubereitung", "bewertung"};
         records.add(header);
 
         for (Rezept rezept : rez) {
-            String[] record = {rezept.name, String.join(";", rezept.zutaten), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";")};
+            String[] record = {rezept.name, String.join(";", rezept.zutaten), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
             records.add(record);
         }
 

@@ -16,6 +16,7 @@ public class Rezept {
         this.kategorien = kategorien;
         this.zeit = zeit;
         this.zubereitung = zubereitung;
+        this.rating = "Unbewertet";
     }
 
     // Wir brauchen die toString() Methode um die Namen im Listenmodus für den Export anzuzeigen
