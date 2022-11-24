@@ -23,6 +23,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.CSVPrinter;
+import org.checkerframework.checker.units.qual.A;
 
 public class Rezeptbuch {
 
@@ -55,6 +56,7 @@ public class Rezeptbuch {
     // nimmt den pfad zu einer CSV Datei und gibt eine Liste mit Rezepten zurück
     ArrayList<Rezept> load(String pfad) {
         ArrayList<Rezept> temp = new ArrayList<Rezept>();
+        ArrayList<Ingredient> zutaten = new ArrayList<>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
 			@SuppressWarnings("deprecation")
 			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
@@ -66,7 +68,15 @@ public class Rezeptbuch {
                     String zeit = csvRecord.get("Zeit");
                     String zubereitung = csvRecord.get("Zubereitung").replaceAll(";", "\n");
 
-                    String[] zutaten = zutatenVoll.split(";");
+                    String[] zutatenString = zutatenVoll.split(";");
+
+                    // we go through the strings in the csv file and parse out the amount, units and names of all ingredients and add them to our list
+                    for (String ingredientString : zutatenString) {
+                        String[] ingredientData = ingredientString.split("\\/");
+                        int value = Integer.parseInt(ingredientData[0]);
+                        Ingredient tempIngredient = new Ingredient(value, ingredientData[1], ingredientData[2]);
+                        zutaten.add(tempIngredient);
+                    }
                     String[] kategorien = kategorienVoll.split(";");
 
                     Rezept rezept = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung);
@@ -210,7 +220,7 @@ public class Rezeptbuch {
 
         //wenn Neu-Button gedrückt wird, erstellt man ein neues Rezept im Rezeptbuch
         neuButton.addActionListener(e -> {
-            Rezept neu = new Rezept("neu", new String[]{"Zutaten"}, "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung");
+            Rezept neu = new Rezept("neu", new ArrayList<Ingredient>(), "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung");
 
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             rezepte_temp.add(neu);
@@ -290,7 +300,7 @@ public class Rezeptbuch {
         personenField.setText(rezept.personen);
         zeitField.setText(rezept.zeit);
         zubereitungArea.setText(rezept.zubereitung);
-        zutatenArea.setText(String.join("\n", rezept.zutaten));
+        zutatenArea.setText(String.join("\n", rezept.ingredients.toString()));
         kategorienArea.setText(String.join(", ", rezept.kategorien));
 
         rezeptPanel.add(nameLabel);
@@ -375,7 +385,29 @@ public class Rezeptbuch {
 
             rezept.kategorien = kategorienArea.getText().split(", ");
 
-            rezept.zutaten = zutatenArea.getText().split("\n");
+            String[] temp = zutatenArea.getText().split("\n"); //
+
+            for (String ingredientString : temp) {
+                // gets length of integers at beginning of string, so that we can parse out amount + units
+                // example: 400g Mehl
+                int res = 0;
+                // this loop will check how many of the first n characters are part of an integer and return the number
+                // example: res = 400 at the end of the loop
+                for (int i=0; i < ingredientString.length(); i++) {
+                    char c = ingredientString.charAt(i);
+                    if (c < '0' || c > '9') continue;
+                    res = res * 10 + (c - '0');
+                }
+                // we split the string at all empty spaces to separate the amount+unit from the name part
+                // example: substrings would be '400g' + 'Mehl'
+                String[] subIngredients = ingredientString.split(" ");
+                // We create a new ingredient to add to the recipe, with the following
+                rezept.ingredients.add(new Ingredient(res, // the number at the beginning of the first string, in our example '400'
+                        ingredientString.substring(String.valueOf(res).length(),subIngredients[0].length()-1), // we add the substring of the amount+unit that denotes the unit.
+                        // we do this by creating a substring of '400g' starting at the end of the length of the integer previously determined, up to the end of the actual string
+                        // essentially everything past the last '0' in 400 and up to and including the 'g'. If someone were to write '400gramm' the entire word 'gramm' would be parsed
+                        subIngredients[1])); // the second part of the split string, which would be 'Mehl'
+            }
 
             save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
@@ -491,7 +523,7 @@ public class Rezeptbuch {
         records.add(header);
 
         for (Rezept rezept : rez) {
-            String[] record = {rezept.name, String.join(";", rezept.zutaten), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
+            String[] record = {rezept.name, String.join(";", rezept.toSaveString()), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
             records.add(record);
         }
 
