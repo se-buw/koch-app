@@ -26,7 +26,7 @@ import org.apache.commons.csv.CSVPrinter;
 
 public class Rezeptbuch {
 
-    private static final String path = "src/main/resources/rezeptbuch.csv";
+    private static final String path = "./app/src/main/resources/rezeptbuch.csv";
     private ArrayList<Rezept> rezepte = new ArrayList<Rezept>();
 
     private JFrame rezeptBuchWindow;
@@ -58,12 +58,12 @@ public class Rezeptbuch {
 			@SuppressWarnings("deprecation")
 			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
                 for (CSVRecord csvRecord : csvParser) {
-                    String name = csvRecord.get("name");
-                    String zutatenVoll = csvRecord.get("zutaten");
-                    String personen = csvRecord.get("personen");
-                    String kategorienVoll = csvRecord.get("kategorien");
-                    String zeit = csvRecord.get("zeit");
-                    String zubereitung = csvRecord.get("zubereitung").replaceAll(";", "\n");
+                    String name = csvRecord.get("Name");
+                    String zutatenVoll = csvRecord.get("Zutaten");
+                    String personen = csvRecord.get("Personen");
+                    String kategorienVoll = csvRecord.get("Kategorien");
+                    String zeit = csvRecord.get("Zeit");
+                    String zubereitung = csvRecord.get("Zubereitung").replaceAll(";", "\n");
 
                     String[] zutaten = zutatenVoll.split(";");
                     String[] kategorien = kategorienVoll.split(";");
@@ -152,7 +152,7 @@ public class Rezeptbuch {
         importButton.addActionListener(e -> {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             // JFileChooser erlaubt es uns leicht einen Pfad zu erhalten
-            JFileChooser chooser = new JFileChooser("src/main/resources");
+            JFileChooser chooser = new JFileChooser("./app/src/main/resources");
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
             chooser.setFileFilter(filter);
             int returnVal = chooser.showOpenDialog(rezeptBuchWindow);
@@ -164,7 +164,7 @@ public class Rezeptbuch {
             addRezepte(auswahlPanel, rezepte_temp);
             // an mehereren Orten speichern wir in eine alternative Datei
             // diese wird derzeit nicht benutzt, war aber sehr hilfreich bei Fehlermeldungen
-            save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+            save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
         exportButton.addActionListener(e -> {
@@ -191,7 +191,7 @@ public class Rezeptbuch {
 
             eButton.addActionListener(f -> {
                 ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>(list.getSelectedValuesList());
-                JFileChooser chooser = new JFileChooser("src/main/resources");
+                JFileChooser chooser = new JFileChooser("./app/src/main/resources");
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
                 chooser.setFileFilter(filter);
                 chooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -213,7 +213,6 @@ public class Rezeptbuch {
             addRezepte(auswahlPanel, rezepte_temp);
             save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
-
         return true;
     }
 
@@ -235,7 +234,7 @@ public class Rezeptbuch {
             @Override
             public void windowClosing(WindowEvent e) {
                 rezept_offen = false;
-                save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+                save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
             }
         });
 
@@ -370,13 +369,13 @@ public class Rezeptbuch {
 
             rezept.zutaten = zutatenArea.getText().split("\n");
 
-            save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+            save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
         exportButton.addActionListener(e -> {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             rezepte_temp.add(rezept);
-            JFileChooser chooser = new JFileChooser("src/main/resources");
+            JFileChooser chooser = new JFileChooser("./app/src/main/resources");
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
             chooser.setFileFilter(filter);
             chooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -453,7 +452,7 @@ public class Rezeptbuch {
     boolean save(String pfad, ArrayList<Rezept> rez) {
 
         CSVFormat format = CSVFormat.DEFAULT;
-        format.builder().setHeader("name", "zutaten", "personen", "kategorien", "zeit", "zubereitung", "rating");
+        format.builder().setHeader("Name", "Zutaten", "Personen", "Kategorien", "Zeit", "Zubereitung", "Rating");
         try (
             BufferedWriter writer = Files.newBufferedWriter(Paths.get(pfad), StandardCharsets.UTF_8) ;
             CSVPrinter printer = new CSVPrinter(writer, format);
@@ -479,7 +478,7 @@ public class Rezeptbuch {
     ArrayList<String[]> getRecords(ArrayList<Rezept> rez) {
         ArrayList<String[]> records = new ArrayList<String[]>();
 
-        String[] header = {"name", "zutaten", "personen", "kategorien", "zeit", "zubereitung", "rating"};
+        String[] header = {"Name", "Zutaten", "Personen", "Kategorien", "Zeit", "Zubereitung", "Rating"};
         records.add(header);
 
         for (Rezept rezept : rez) {

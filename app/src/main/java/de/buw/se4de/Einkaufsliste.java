@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Einkaufsliste {
-    private static final String LISTE = "src/main/resources/liste.csv";
+    private static final String LISTE = "./app/src/main/resources/liste.csv";
 
     private Scanner scanner = new Scanner(System.in);
 
@@ -121,7 +121,7 @@ public class Einkaufsliste {
         try {//result is ignored because the existence of the file matters only
             f.createNewFile();
         } catch (IOException e) {
-            System.err.print("File could not be created.");
+            System.err.print("Datei konnte nicht erstellt werden.");
             throw new RuntimeException(e);
         }
         //opening the writer to write into the csv file
@@ -130,16 +130,16 @@ public class Einkaufsliste {
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)){
             do {
                 //asking the user for input
-                System.out.println("Would you like to add something to your grocery list? (If no, then type 'no')");
+                System.out.println("Was möchten Sie noch zu Ihrer Einkaufsliste hinzufügen? (Falls nicht, schreiben Sie bitte 'nein')");
                 //scanning his answer
                 String item = scanner.nextLine();
                 //breaking the while loop if the user does not want to add any items
-                if (item.equalsIgnoreCase("no")) { break; }
+                if (item.equalsIgnoreCase("nein")) { break; }
                 //asking the user how much he wants to add of the item
-                System.out.println("How much of it would you like to add?");
+                System.out.println("Wie viel brauchen Sie davon?");
                 String menge = scanner.nextLine();
                 //recording those values in the csv file
-                csvPrinter.printRecord(item, menge);
+                csvPrinter.printRecord(menge, item);
             } while (true);
         }
         catch (IOException e) {
@@ -156,17 +156,17 @@ public class Einkaufsliste {
             //starts the option to 'delete' an item
             do {
                 //Scanning user's input for deleting an item
-                System.out.println("Would you like to delete something? (If no, then type 'no')");
+                System.out.println("Welchen Eintrag möchten Sie löschen? (Falls nicht, schreiben Sie bitte 'nein')");
                 String item = scanner.nextLine();
                 //breaks while loop if nothing should be deleted
-                if (item.equalsIgnoreCase("no")) { break; }
+                if (item.equalsIgnoreCase("nein")) { break; }
                 //adds all items and amounts to the array
                 for (CSVRecord csvRecord : csvParser) {
                     list.addAll(Arrays.asList(csvRecord.get(0), csvRecord.get(1)));
                 }
                 //case if item is not on the list
                 if (!list.contains(item)) {
-                    System.out.println("This item is not on your list.");
+                    System.out.println("Dieser Eintrag befindet sich nicht auf der Liste.");
                 }
                 else {
                     //starting to overwrite the file
@@ -184,6 +184,7 @@ public class Einkaufsliste {
                         int k = list.indexOf(item);
                         list.remove(k);
                         list.remove(k);
+                        System.out.println(item + " wurde gelöscht");
                     }
                 }
             } while (true);
