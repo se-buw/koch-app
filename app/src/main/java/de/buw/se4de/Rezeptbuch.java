@@ -67,22 +67,11 @@ public class Rezeptbuch {
                     String zeit = csvRecord.get("Zeit");
                     String zubereitung = csvRecord.get("Zubereitung").replaceAll(";", "\n");
 
-
-                    String[] zutaten = zutatenVoll.split(";");
-
                     String[] zutatenString = zutatenVoll.split(";");
-
-                    // we go through the strings in the csv file and parse out the amount, units and names of all ingredients and add them to our list
-                    /*for (String ingredientString : zutatenString) {
-                        String[] ingredientData = ingredientString.split("/");
-                        int value = Integer.parseInt(ingredientData[0]);
-                        Ingredient tempIngredient = new Ingredient(value, ingredientData[1], ingredientData[2]);
-                        zutaten.add(tempIngredient);
-                    }*/
 
                     String[] kategorien = kategorienVoll.split(";");
 
-                    Rezept rezept = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung);
+                    Rezept rezept = new Rezept(name, ing, personen, kategorien, zeit, zubereitung);
                     parseRecipeIngredients(rezept, zutatenString);
                     temp.add(rezept);
                 }
@@ -224,8 +213,7 @@ public class Rezeptbuch {
 
         //wenn Neu-Button gedrückt wird, erstellt man ein neues Rezept im Rezeptbuch
         neuButton.addActionListener(e -> {
-            Rezept neu = new Rezept("neu", new String[]{"Zutaten"}, "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung");
-
+            Rezept neu = new Rezept("neu", new ArrayList<>(), "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung");
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             rezepte_temp.add(neu);
             rezepte.add(neu);
@@ -304,7 +292,7 @@ public class Rezeptbuch {
         personenField.setText(rezept.personen);
         zeitField.setText(rezept.zeit);
         zubereitungArea.setText(rezept.zubereitung);
-        zutatenArea.setText(String.join("\n", rezept.zutaten));
+        zutatenArea.setText(String.join("\n", rezept.ingredients.toString()));
         kategorienArea.setText(String.join(", ", rezept.kategorien));
 
         rezeptPanel.add(nameLabel);
@@ -388,9 +376,6 @@ public class Rezeptbuch {
             rezept.zubereitung = zubereitungArea.getText();
 
             rezept.kategorien = kategorienArea.getText().split(", ");
-
-
-            rezept.zutaten = zutatenArea.getText().split("\n");
 
             String[] temp = zutatenArea.getText().split("\n"); //
 
@@ -536,7 +521,7 @@ public class Rezeptbuch {
         records.add(header);
 
         for (Rezept rezept : rez) {
-            String[] record = {rezept.name, String.join(";", rezept.zutaten), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
+            String[] record = {rezept.name, String.join(";", rezept.ingredients.toString()), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
             records.add(record);
         }
 

@@ -20,9 +20,6 @@ public class Ingredient {
     public String toString(){ // creates string for printing in jpanels
         return amount + unit + " " + name;
     }
-    public String toSaveString() {  // String stores amount units and name in 'amount/unit/name;' format for csv saving ex.: '4/cups/flower'
-        return amount + "/" + unit + "/" + name + ";";
-    }
 
     public void adjustAmount(float desiredServings, float recipeServings) {      // we pass the amount the user desires, as well as the servings the original recipe can generate into the function
         // just to be safe we ensure that the user wants a non-zero number of servings
