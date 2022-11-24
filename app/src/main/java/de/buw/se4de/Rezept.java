@@ -7,6 +7,7 @@ public class Rezept {
     String[] kategorien;
     String zeit;
     String zubereitung;
+    String rating = "Unbewertet"; // allows recipes to be rated
 
     public Rezept(String name, String[] zutaten, String personen, String[] kategorien, String zeit, String zubereitung) {
         this.name = name;

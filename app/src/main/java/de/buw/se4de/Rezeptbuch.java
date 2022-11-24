@@ -226,7 +226,7 @@ public class Rezeptbuch {
         }
         rezept_offen = true;
         is_editable = false;
-        
+
         rezeptWindow = new JFrame(rezept.name);
         rezeptWindow.setSize(800, 900);
         rezeptWindow.setResizable(false);
@@ -248,6 +248,8 @@ public class Rezeptbuch {
 
         JLabel nameLabel = new JLabel("Name", SwingConstants.CENTER);
         JTextField nameField = new JTextField();
+        JLabel ratingLabel = new JLabel("Bewertung:", SwingConstants.CENTER);
+        JTextField ratingField = new JTextField();
         JLabel kategorienLabel = new JLabel("Kategorien", SwingConstants.CENTER);
         JTextArea kategorienArea = new JTextArea();
         JLabel zutatenLabel = new JLabel("Zutaten", SwingConstants.CENTER);
@@ -263,6 +265,7 @@ public class Rezeptbuch {
         JScrollPane zutScroll = new JScrollPane(zutatenArea);
 
         nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, nameField.getPreferredSize().height));
+        ratingField.setMaximumSize(new Dimension(Integer.MAX_VALUE, nameField.getPreferredSize().height));
         personenField.setMaximumSize(new Dimension(Integer.MAX_VALUE, personenField.getPreferredSize().height));
         zeitField.setMaximumSize(new Dimension(Integer.MAX_VALUE, zeitField.getPreferredSize().height));
 
@@ -270,6 +273,7 @@ public class Rezeptbuch {
         zutatenArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, zutatenArea.getPreferredSize().height));
 
         nameField.setEditable(false);
+        ratingField.setEditable(false);
         kategorienArea.setEditable(false);
         zutatenArea.setEditable(false);
         personenField.setEditable(false);
@@ -277,6 +281,7 @@ public class Rezeptbuch {
         zubereitungArea.setEditable(false);
 
         nameField.setText(rezept.name);
+        ratingField.setText(rezept.rating);
         personenField.setText(rezept.personen);
         zeitField.setText(rezept.zeit);
         zubereitungArea.setText(rezept.zubereitung);
@@ -285,6 +290,8 @@ public class Rezeptbuch {
 
         rezeptPanel.add(nameLabel);
         rezeptPanel.add(nameField);
+        rezeptPanel.add(ratingLabel);
+        rezeptPanel.add(ratingField);
         rezeptPanel.add(kategorienLabel);
         rezeptPanel.add(kategorienArea);
         rezeptPanel.add(zutatenLabel);
@@ -301,10 +308,12 @@ public class Rezeptbuch {
         JButton editButton = new JButton("Editiermodus aktivieren");
         JButton saveButton = new JButton("Speichern");
         JButton exportButton = new JButton("Exportieren");
+        JButton ratingButton = new JButton("Bewerten");
 
         funktionenPanel.add(editButton);
         funktionenPanel.add(saveButton);
         funktionenPanel.add(exportButton);
+        funktionenPanel.add(ratingButton);
 
         mainPanel.add(rezeptPanel);
         mainPanel.add(funktionenPanel, BorderLayout.NORTH);
@@ -316,7 +325,7 @@ public class Rezeptbuch {
         rezeptWindow.requestFocus();
 
         editButton.addActionListener(e -> {
-			if(is_editable) {
+            if (is_editable) {
                 nameField.setEditable(false);
                 kategorienArea.setEditable(false);
                 zutatenArea.setEditable(false);
@@ -335,7 +344,7 @@ public class Rezeptbuch {
                 editButton.setText("Editiermodus deaktivieren");
                 is_editable = !is_editable;
             }
-		});
+        });
 
         saveButton.addActionListener(e -> {
             rezept.name = nameField.getText();
@@ -358,7 +367,7 @@ public class Rezeptbuch {
             rezept.zubereitung = zubereitungArea.getText();
 
             rezept.kategorien = kategorienArea.getText().split(", ");
-            
+
             rezept.zutaten = zutatenArea.getText().split("\n");
 
             save("src/main/resources/rezeptebuch_LIVE.csv", rezepte);
@@ -373,8 +382,23 @@ public class Rezeptbuch {
             chooser.setDialogType(JFileChooser.SAVE_DIALOG);
             chooser.setSelectedFile(new File(rezept.name + ".csv"));
             int returnVal = chooser.showSaveDialog(rezeptWindow);
-            if(returnVal == JFileChooser.APPROVE_OPTION) {
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
                 save(chooser.getSelectedFile().getPath(), rezepte_temp);
+            }
+        });
+
+        ratingButton.addActionListener(e -> {
+            Object[] possibilities = {"Schlecht", "So-so", "Gut", "Sehr gut", "Favorit"};
+            String rating = (String)JOptionPane.showInputDialog(
+                    rezeptBuchWindow,
+                    "Bewerten Sie dieses Rezept:\n",
+                    "Rezept Bewerten",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    possibilities,
+                    "Gut");
+            if ((rating != null) && (rating.length() > 0)) {
+                rezept.rating = rating;
             }
         });
     }
