@@ -6,12 +6,9 @@ package de.buw.se4de;
 // IMPORTANT: for conversion to work, ingredients in csv must be written in 'amount/unit/name;' format and
 // edited ingredients must be written in 'amountunit name' format
 public class Ingredient {
-    int amount;
     float amount;
     String unit;
     String name;
-}
-
 
     // allows saving and parsing of ingredient names and amounts
 
