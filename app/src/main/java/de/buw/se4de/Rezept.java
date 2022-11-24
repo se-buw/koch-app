@@ -27,10 +27,16 @@ public class Rezept {
         return name;
     }
 
-    public String ingredientString() {
+    public String ingredientString(boolean display) {
+        String divider = ";";
+
+        if (display){
+            divider = "\n";
+        }
         String allStrings = "";
         for (Ingredient ingredient : ingredients) {
-            allStrings.concat(ingredient.toString() + ";");
+            allStrings.concat(ingredient.toString() + divider);
+            System.out.println(allStrings);
         }
         return allStrings;
     }

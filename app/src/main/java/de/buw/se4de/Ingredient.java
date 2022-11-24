@@ -26,7 +26,7 @@ public class Ingredient {
 
     public void adjustAmount(float desiredServings, float recipeServings) {      // we pass the amount the user desires, as well as the servings the original recipe can generate into the function
         // just to be safe we ensure that the user wants a non-zero number of servings
-        if (desiredServings != 0.0f) {
+        if (desiredServings > 0.0f) {
             float singleServing = amount / recipeServings;
             amount = singleServing * desiredServings;
         }

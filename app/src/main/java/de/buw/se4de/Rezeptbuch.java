@@ -18,6 +18,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -292,7 +293,8 @@ public class Rezeptbuch {
         personenField.setText(rezept.personen);
         zeitField.setText(rezept.zeit);
         zubereitungArea.setText(rezept.zubereitung);
-        zutatenArea.setText(String.join("\n", rezept.ingredients.toString()));
+        zutatenArea.setText(Arrays.toString(rezept.ingredients.toArray()).replace("[",
+                "").replace("]", "").replace(",", "\n"));
         kategorienArea.setText(String.join(", ", rezept.kategorien));
 
         rezeptPanel.add(nameLabel);
@@ -521,10 +523,11 @@ public class Rezeptbuch {
         records.add(header);
 
         for (Rezept rezept : rez) {
-            String[] record = {rezept.name, String.join(";", rezept.ingredientString()), rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
+            String ingredientList = Arrays.toString(rezept.ingredients.toArray()).replace("[", "").replace("]", "").replace(",", ";");
+            String[] record = {rezept.name, String.join(";", ingredientList) , rezept.personen, String.join(";", rezept.kategorien), rezept.zeit, rezept.zubereitung.replaceAll("\n", ";"), rezept.rating};
             records.add(record);
         }
-
         return records;
     }
 }
+
