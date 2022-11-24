@@ -368,9 +368,9 @@ public class Rezeptbuch {
 
             String zeit = zeitField.getText();
             if (per.matches("[0-9][0-9]:[0-9][0-9]:[0-9][0-9]")) {
-                rezept.zeit = zeit;
-            } else {
                 zeitField.setText(rezept.zeit);
+            } else {
+                rezept.zeit = zeit;
             }
 
             rezept.zubereitung = zubereitungArea.getText();
