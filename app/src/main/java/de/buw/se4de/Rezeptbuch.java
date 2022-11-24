@@ -37,8 +37,9 @@ public class Rezeptbuch {
 
     private boolean is_editable = false;
 
+    //neues Rezeptbuch-Window initialisieren
     JFrame init() {
-        // wenn schon Rezeptbuch offen ist wollen wir kein zweites
+        // wenn schon Rezeptbuch offen ist, wollen wir kein zweites
         if (running) return rezeptBuchWindow;
         running = true;
         System.out.println("Rezeptbuch geöffnet");
@@ -51,7 +52,7 @@ public class Rezeptbuch {
         return rezeptBuchWindow;
     }
 
-    // nimmt den pfad zu einer CSV Datei und gibt eine Liste mit Rezepeten zurück
+    // nimmt den pfad zu einer CSV Datei und gibt eine Liste mit Rezepten zurück
     ArrayList<Rezept> load(String pfad) {
         ArrayList<Rezept> temp = new ArrayList<Rezept>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
@@ -77,7 +78,7 @@ public class Rezeptbuch {
         return temp;
     } 
 
-    // Rezeptbuchfenster und Buttons
+    // Untermethode, dass Rezeptbuchfenster erstellt und Buttons
     void initWindow() {
         rezeptBuchWindow = new JFrame("Rezeptbuch");
 		rezeptBuchWindow.setSize(1280, 720);
@@ -95,6 +96,7 @@ public class Rezeptbuch {
 		
         JPanel auswahlPanel = new JPanel(new GridLayout(0, 5, 20, 20));
 
+        //erstellt für jedes Rezept im Rezeptbuch einen neuen Button
         for (Rezept rezept : rezepte) {
             JButton tempButton = new JButton(rezept.name);
 
@@ -114,7 +116,7 @@ public class Rezeptbuch {
 
         auswahlScrollPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-
+        //Labels (angezeigte Schrift) und Buttons
         JPanel suchPanel = new JPanel();
         JLabel suchNameLabel = new JLabel("Name:");
         JLabel suchKategorieLabel = new JLabel("Kategorien:");
@@ -129,7 +131,7 @@ public class Rezeptbuch {
         suchKategorieTextField.setColumns(30);
 
         suchKategorieTextField.setToolTipText("Man kann mehrere Kategorien mit \",\" angeben");
-
+        //zum Panel hinzufügen
         suchPanel.add(suchNameLabel);
         suchPanel.add(suchNameTextField);
         suchPanel.add(suchKategorieLabel);
@@ -141,7 +143,7 @@ public class Rezeptbuch {
         
         rezeptBuchWindow.getContentPane().add(suchPanel, BorderLayout.NORTH);
         rezeptBuchWindow.getContentPane().add(auswahlScrollPanel);
-        
+        //sichtbar machen
         rezeptBuchWindow.validate();
 		rezeptBuchWindow.setVisible(true);
 
@@ -149,6 +151,7 @@ public class Rezeptbuch {
             showSearch(auswahlPanel, suchNameTextField.getText(),suchKategorieTextField.getText());
         });
 
+        //wenn Import-Button gedrückt wird, öffnet sich Fenster zum Dateien öffnen
         importButton.addActionListener(e -> {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             // JFileChooser erlaubt es uns leicht einen Pfad zu erhalten
@@ -167,6 +170,7 @@ public class Rezeptbuch {
             save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
+        /* wenn Export-Button gedrückt wird, öffnet sich Fenster wo der Speicherort vom csv file festgelegt wird */
         exportButton.addActionListener(e -> {
             JFrame exportFrame = new JFrame("Exportieren");
             exportFrame.setSize(600, 600);
@@ -204,6 +208,7 @@ public class Rezeptbuch {
             });
         });
 
+        //wenn Neu-Button gedrückt wird, erstellt man ein neues Rezept im Rezeptbuch
         neuButton.addActionListener(e -> {
             Rezept neu = new Rezept("neu", new String[]{"Zutaten"}, "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung");
 
@@ -216,6 +221,7 @@ public class Rezeptbuch {
     }
 
     // lässt die Rezeptknöpfe ein extra Rezeptfenster öffnen
+    /* Layout vom Rezeptfenster */
     void setupButton(Rezept rezept, JButton button) {
         if (rezept_offen) {
             rezeptWindow.toFront();
@@ -229,6 +235,7 @@ public class Rezeptbuch {
         rezeptWindow.setSize(800, 900);
         rezeptWindow.setResizable(false);
 
+        //wenn Fenster geschlossen wird, wird nochmal gespeichert
         rezeptWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -249,7 +256,7 @@ public class Rezeptbuch {
         JLabel ratingLabel = new JLabel("Bewertung:", SwingConstants.CENTER);
         JTextField ratingField = new JTextField();
         JLabel kategorienLabel = new JLabel("Kategorien", SwingConstants.CENTER);
-        JTextArea kategorienArea = new JTextArea();
+        JTextField kategorienArea = new JTextField();
         JLabel zutatenLabel = new JLabel("Zutaten", SwingConstants.CENTER);
         JTextArea zutatenArea = new JTextArea();
         JLabel personenLabel = new JLabel("Personen Anzahl", SwingConstants.CENTER);
@@ -322,6 +329,7 @@ public class Rezeptbuch {
         rezeptWindow.toFront();
         rezeptWindow.requestFocus();
 
+        //wenn edit button gedrückt wird, sollen die Werte editierbar sein
         editButton.addActionListener(e -> {
             if (is_editable) {
                 nameField.setEditable(false);
@@ -344,6 +352,7 @@ public class Rezeptbuch {
             }
         });
 
+        //wenn Speichern gedrückt wird, sollen neue werte gespeichert werden
         saveButton.addActionListener(e -> {
             rezept.name = nameField.getText();
             button.setText(rezept.name);
@@ -371,6 +380,7 @@ public class Rezeptbuch {
             save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
+        //wenn man Rezept exportieren möchte, export button drücken und es erscheint ein Speicherpfad-Window
         exportButton.addActionListener(e -> {
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             rezepte_temp.add(rezept);
@@ -385,6 +395,7 @@ public class Rezeptbuch {
             }
         });
 
+        //Bewerten-Button wurde gedrückt und neues Bewertungsfenster öffnet sich
         ratingButton.addActionListener(e -> {
             Object[] possibilities = {"Schlecht", "So-so", "Gut", "Sehr gut", "Favorit"};
             String rating = (String)JOptionPane.showInputDialog(
@@ -396,7 +407,7 @@ public class Rezeptbuch {
                     possibilities,
                     "Gut");
             if ((rating != null) && (rating.length() > 0)) {
-
+                //todo
             }
             rezept.rating = rating;
             ratingField.setText(rating);
@@ -419,7 +430,7 @@ public class Rezeptbuch {
         rezeptBuchWindow.repaint();
     }
 
-    // Hilfsmethode um herauszufinden ob sich eine Kategorie im Rezept befindet
+    // Hilfsmethode um herauszufinden, ob sich eine Kategorie im Rezept befindet
     boolean find_kategorie(Rezept rezept, String kategorien) {
         for (String kategorie : kategorien.split(",")) {
             for (String gibt : rezept.kategorien) {
@@ -462,7 +473,7 @@ public class Rezeptbuch {
         }
     }
 
-    // setzt die Klasse zurück um Probleme mit wiederholtem Öffnen zu vermeiden
+    // setzt die Klasse zurück, um Probleme mit wiederholtem Öffnen zu vermeiden
     void unload() {
         rezepte.clear();
         if (rezeptWindow != null)
