@@ -23,6 +23,7 @@ class RezeptTest {
 		assertNotEquals("", r.ingredientString(false));
 	}
 
+	@Test
 	void testConstructor(){
 		String name = "Eierkuchen";
 		Ingredient eier = new Ingredient(1, "st", "Eier");
