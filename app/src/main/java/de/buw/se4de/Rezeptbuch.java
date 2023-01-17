@@ -27,7 +27,7 @@ import org.apache.commons.csv.CSVPrinter;
 
 public class Rezeptbuch {
 
-    private static final String path = "./app/src/main/resources/rezeptbuch.csv";
+    private static final String path = "./src/main/resources/rezeptbuch.csv";
     private ArrayList<Rezept> rezepte = new ArrayList<>();
 
     private JFrame rezeptBuchWindow;
@@ -58,7 +58,6 @@ public class Rezeptbuch {
         ArrayList<Rezept> temp = new ArrayList<Rezept>();
         ArrayList<Ingredient> ing = new ArrayList<>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
-			@SuppressWarnings("deprecation")
 			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
                 for (CSVRecord csvRecord : csvParser) {
                     String name = csvRecord.get("Name");
@@ -76,7 +75,7 @@ public class Rezeptbuch {
                     parseRecipeIngredients(rezept, zutatenString);
                     temp.add(rezept);
                 }
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
         return temp;

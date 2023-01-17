@@ -12,7 +12,6 @@ public class App {
 	static Einkaufsliste liste;
 
 	public static void main(String[] args) {
-		// System.out.println(new App().getGreeting());
 		buch = new Rezeptbuch();
 		liste = new Einkaufsliste();
 
@@ -28,32 +27,37 @@ public class App {
 		JPanel rezeptPanel = new JPanel(new BorderLayout());
 		JLabel rezeptLabel = new JLabel("Rezeptbuch", SwingConstants.CENTER);
 		JButton rezeptButton = new JButton("Rezeptbuch \u00F6ffnen");
-		JPanel einkaufslistePanel = new JPanel(new GridLayout(3, 1, 10, 10));
-		JPanel einkaufslisteGUIPanel = new JPanel(new BorderLayout());
-		JPanel einkaufslisteCLIPanel = new JPanel(new BorderLayout());
-		JPanel einkaufslisteCLISubPanel = new JPanel(new GridLayout(1, 0, 10, 10));
-		JLabel einkaufslisteGUILabel = new JLabel("Einkaufsliste GUI", SwingConstants.CENTER);
-		JLabel einkaufslisteCLILabel = new JLabel("Einkaufsliste CLI", SwingConstants.CENTER);
-		JButton einkaufslisteGUIButton = new JButton("Einkaufsliste \u00F6ffnen");
-		JButton einkaufslisteCLIPrintButton = new JButton("Einkaufsliste \n anzeigen");
-		JButton einkaufslisteCLIAddButton = new JButton("Artikel \n hinzuf\u00FCgen");
-		JButton einkaufslisteCLIDeleteButton = new JButton("Artikel \n entfernen");
+		//JPanel einkaufslistePanel = new JPanel(new GridLayout(3, 1, 10, 10));
+		JPanel einkaufslistePanel = new JPanel(new GridBagLayout());
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+
+		JLabel einkaufslisteLabel = new JLabel("Einkaufsliste", SwingConstants.CENTER);
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridheight = 1;
+		einkaufslistePanel.add(einkaufslisteLabel, c);
+
+		JButton einkaufslisteSave = new JButton("Speichern");
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridheight = 1;
+		einkaufslistePanel.add(einkaufslisteSave, c);
+
+		JTextArea textArea = new JTextArea();
+		c.gridx = 0;
+		c.gridy = 3;
+		//c.gridwidth = 5;
+		c.gridheight = 2;
+		einkaufslistePanel.add(textArea, c);
 
 		rezeptPanel.add(rezeptLabel, BorderLayout.NORTH);
 		rezeptPanel.add(rezeptButton, BorderLayout.CENTER);
 
-		einkaufslisteCLISubPanel.add(einkaufslisteCLIPrintButton);
-		einkaufslisteCLISubPanel.add(einkaufslisteCLIAddButton);
-		einkaufslisteCLISubPanel.add(einkaufslisteCLIDeleteButton);
-
-		einkaufslisteGUIPanel.add(einkaufslisteGUILabel, BorderLayout.NORTH);
-		einkaufslisteCLIPanel.add(einkaufslisteCLILabel, BorderLayout.NORTH);
-
-		einkaufslisteGUIPanel.add(einkaufslisteGUIButton);
-		einkaufslisteCLIPanel.add(einkaufslisteCLISubPanel);
-
-		einkaufslistePanel.add(einkaufslisteGUIPanel);
-		einkaufslistePanel.add(einkaufslisteCLIPanel);
+		textArea.setText(liste.set_inhalt());
 
 		mainPanel.add(rezeptPanel);
 		mainPanel.add(einkaufslistePanel);
@@ -62,38 +66,19 @@ public class App {
 
 		mainWindow.getContentPane().add(mainPanel);
 
-		setupButtons(rezeptButton, einkaufslisteGUIButton, einkaufslisteCLIPrintButton, einkaufslisteCLIAddButton, einkaufslisteCLIDeleteButton);
+		rezeptButton.addActionListener(e -> {
+			JFrame rezeptBuchWindow = buch.init();
+			rezeptBuchWindow.toFront();
+			rezeptBuchWindow.requestFocus();
+		});
+
+		einkaufslisteSave.addActionListener(e -> {
+			liste.save(textArea.getText());
+		});
 
 		mainWindow.setVisible(true);
 		mainWindow.toFront();
 		mainWindow.requestFocus();
-
-	}
-
-	static void setupButtons(JButton rButton, JButton eGUIButton, JButton eCLIPButton, JButton eCLIAButton, JButton eCLIDButton) {
-		rButton.addActionListener(e -> {
-			JFrame rezeptBuchWindow = buch.init();
-			rezeptBuchWindow.toFront();
-        	rezeptBuchWindow.requestFocus();
-		});
-
-		eGUIButton.addActionListener(e -> {
-			JFrame einkaufslisteWindow = liste.init();
-			einkaufslisteWindow.toFront();
-        	einkaufslisteWindow.requestFocus();
-		});
-
-		eCLIPButton.addActionListener(e -> {
-			liste.print();
-		});
-
-		eCLIAButton.addActionListener(e -> {
-			liste.add_items();
-		});
-
-		eCLIDButton.addActionListener(e -> {
-			liste.delete_items();
-		});
 
 	}
 }
