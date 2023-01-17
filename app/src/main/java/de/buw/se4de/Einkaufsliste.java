@@ -1,6 +1,6 @@
 package de.buw.se4de;
-
-import org.apache.commons.csv.CSVFormat; //I added libraries by maven to the project structure
+//I added libraries by maven to the project structure
+import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
@@ -33,6 +33,7 @@ public class Einkaufsliste {
 
     void save(String inhalt){
         File f = new File(LISTE);
+        // only ingredients with form "name count" are saved
         try(
                 BufferedWriter writer = new BufferedWriter(new FileWriter(f));
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)){
@@ -42,7 +43,7 @@ public class Einkaufsliste {
                 String menge = temp[1];
                 csvPrinter.printRecord(item, menge);
             }
-        } catch (IOException err) {
+        } catch (Exception err) {
             err.printStackTrace();
         }
     }

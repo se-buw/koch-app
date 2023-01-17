@@ -4,7 +4,6 @@
 package de.buw.se4de;
 
 import javax.swing.*;
-
 import java.awt.*;
 
 public class App {
@@ -19,6 +18,7 @@ public class App {
 	}
 
 	static void setupWindow() {
+		// set up GUI
 		JFrame mainWindow = new JFrame("Koch-App");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setSize(1100, 600);
@@ -66,7 +66,11 @@ public class App {
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		mainWindow.getContentPane().add(mainPanel);
+		mainWindow.setVisible(true);
+		mainWindow.toFront();
+		mainWindow.requestFocus();
 
+		// set up action for buttons
 		rezeptButton.addActionListener(e -> {
 			JFrame rezeptBuchWindow = buch.init();
 			rezeptBuchWindow.toFront();
@@ -74,10 +78,5 @@ public class App {
 		});
 
 		einkaufslisteSave.addActionListener(e -> liste.save(textArea.getText()));
-
-		mainWindow.setVisible(true);
-		mainWindow.toFront();
-		mainWindow.requestFocus();
-
 	}
 }
