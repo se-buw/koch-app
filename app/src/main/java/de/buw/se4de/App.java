@@ -27,7 +27,6 @@ public class App {
 		JPanel rezeptPanel = new JPanel(new BorderLayout());
 		JLabel rezeptLabel = new JLabel("Rezeptbuch", SwingConstants.CENTER);
 		JButton rezeptButton = new JButton("Rezeptbuch \u00F6ffnen");
-		//JPanel einkaufslistePanel = new JPanel(new GridLayout(3, 1, 10, 10));
 		JPanel einkaufslistePanel = new JPanel(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
@@ -39,19 +38,21 @@ public class App {
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridheight = 1;
+		c.anchor = GridBagConstraints.NORTH;
 		einkaufslistePanel.add(einkaufslisteLabel, c);
 
 		JButton einkaufslisteSave = new JButton("Speichern");
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridheight = 1;
+		c.anchor = GridBagConstraints.NORTH;
 		einkaufslistePanel.add(einkaufslisteSave, c);
 
 		JTextArea textArea = new JTextArea();
 		c.gridx = 0;
 		c.gridy = 3;
-		//c.gridwidth = 5;
 		c.gridheight = 2;
+		c.weighty = 20.0;
 		einkaufslistePanel.add(textArea, c);
 
 		rezeptPanel.add(rezeptLabel, BorderLayout.NORTH);
