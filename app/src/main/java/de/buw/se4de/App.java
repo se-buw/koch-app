@@ -72,9 +72,7 @@ public class App {
 			rezeptBuchWindow.requestFocus();
 		});
 
-		einkaufslisteSave.addActionListener(e -> {
-			liste.save(textArea.getText());
-		});
+		einkaufslisteSave.addActionListener(e -> liste.save(textArea.getText()));
 
 		mainWindow.setVisible(true);
 		mainWindow.toFront();

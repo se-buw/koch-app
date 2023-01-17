@@ -6,22 +6,9 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Scanner;
-
-import javax.swing.*;
-import java.awt.BorderLayout;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Einkaufsliste {
     private static final String LISTE = "./src/main/resources/liste.csv";
-
-    private final Scanner scanner = new Scanner(System.in);
 
     String set_inhalt(){
 
