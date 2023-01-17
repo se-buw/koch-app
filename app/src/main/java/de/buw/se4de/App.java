@@ -59,6 +59,7 @@ public class App {
 		rezeptPanel.add(rezeptButton, BorderLayout.CENTER);
 
 		textArea.setText(liste.set_inhalt());
+		textArea.setPreferredSize(new Dimension(2,500));
 
 		mainPanel.add(rezeptPanel);
 		mainPanel.add(einkaufslistePanel);
