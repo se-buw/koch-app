@@ -39,7 +39,7 @@ public class Einkaufsliste {
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)){
             for (String zeile : inhalt.split("\n")) {
                 String[] temp = zeile.split(" ");
-                String item = temp[0]; //todo nicht negative werte und 0
+                String item = temp[0];
                 String menge = temp[1];
                 csvPrinter.printRecord(item, menge);
             }

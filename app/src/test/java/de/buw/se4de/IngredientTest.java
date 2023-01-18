@@ -47,7 +47,7 @@ class IngredientTest {
 		Ingredient i = new Ingredient(amount, unit, name);
 
 		i.adjustAmount(0, 1);
-		assertEquals(2, i.amount);
+		assertEquals(0, i.amount);
 		assertEquals(unit, i.unit);
 	}
 

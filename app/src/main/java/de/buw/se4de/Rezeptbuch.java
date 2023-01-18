@@ -28,7 +28,7 @@ import org.apache.commons.csv.CSVPrinter;
 public class Rezeptbuch {
 
     private static final String path = "./src/main/resources/rezeptbuch.csv";
-    private ArrayList<Rezept> rezepte = new ArrayList<>();
+    private final ArrayList<Rezept> rezepte = new ArrayList<>();
 
     private JFrame rezeptBuchWindow;
     private JFrame rezeptWindow;
@@ -57,7 +57,7 @@ public class Rezeptbuch {
         ArrayList<Rezept> temp = new ArrayList<>();
         ArrayList<Ingredient> ing = new ArrayList<>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
-			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
+			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
                 for (CSVRecord csvRecord : csvParser) {
                     String name = csvRecord.get("Name");
                     String zutatenVoll = csvRecord.get("Zutaten");
@@ -102,9 +102,7 @@ public class Rezeptbuch {
         for (Rezept rezept : rezepte) {
             JButton tempButton = new JButton(rezept.name);
 
-            tempButton.addActionListener(e -> {
-                setupButton(rezept, tempButton);
-            });
+            tempButton.addActionListener(e -> setupButton(rezept, tempButton));
 
             tempButton.setPreferredSize(new Dimension(0, 200));
             auswahlPanel.add(tempButton);
@@ -149,13 +147,11 @@ public class Rezeptbuch {
         rezeptBuchWindow.validate();
 		rezeptBuchWindow.setVisible(true);
 
-        suchButton.addActionListener(e -> {
-            showSearch(auswahlPanel, suchNameTextField.getText(),suchKategorieTextField.getText());
-        });
+        suchButton.addActionListener(e -> showSearch(auswahlPanel, suchNameTextField.getText(),suchKategorieTextField.getText()));
 
         //wenn Import-Button gedrückt wird, öffnet sich Fenster zum Dateien öffnen
         importButton.addActionListener(e -> {
-            ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
+            ArrayList<Rezept> rezepte_temp = new ArrayList<>();
             // JFileChooser erlaubt es uns leicht einen Pfad zu erhalten
             JFileChooser chooser = new JFileChooser("./app/src/main/resources");
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
@@ -178,11 +174,11 @@ public class Rezeptbuch {
             exportFrame.setSize(600, 600);
             exportFrame.setResizable(false);
 
-            DefaultListModel<Rezept> listMod = new DefaultListModel<Rezept>();
+            DefaultListModel<Rezept> listMod = new DefaultListModel<>();
 
             listMod.addAll(rezepte);
 
-            JList<Rezept> list = new JList<Rezept>(listMod);
+            JList<Rezept> list = new JList<>(listMod);
             list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
             JScrollPane listScroller = new JScrollPane(list);
             listScroller.setPreferredSize(new Dimension(600, 600));
@@ -196,7 +192,7 @@ public class Rezeptbuch {
 		    exportFrame.setVisible(true);
 
             eButton.addActionListener(f -> {
-                ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>(list.getSelectedValuesList());
+                ArrayList<Rezept> rezepte_temp = new ArrayList<>(list.getSelectedValuesList());
                 JFileChooser chooser = new JFileChooser("./app/src/main/resources");
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
                 chooser.setFileFilter(filter);
@@ -213,7 +209,7 @@ public class Rezeptbuch {
         //wenn Neu-Button gedrückt wird, erstellt man ein neues Rezept im Rezeptbuch
         neuButton.addActionListener(e -> {
             Rezept neu = new Rezept("neu", new ArrayList<>(), "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung","Unbewertet");
-            ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
+            ArrayList<Rezept> rezepte_temp = new ArrayList<>();
             rezepte_temp.add(neu);
             rezepte.add(neu);
             addRezepte(auswahlPanel, rezepte_temp);
@@ -343,7 +339,6 @@ public class Rezeptbuch {
                 zeitField.setEditable(false);
                 zubereitungArea.setEditable(false);
                 editButton.setText("Editiermodus aktivieren");
-                is_editable = !is_editable;
             } else {
                 nameField.setEditable(true);
                 kategorienArea.setEditable(true);
@@ -352,8 +347,8 @@ public class Rezeptbuch {
                 zeitField.setEditable(true);
                 zubereitungArea.setEditable(true);
                 editButton.setText("Editiermodus deaktivieren");
-                is_editable = !is_editable;
             }
+            is_editable = !is_editable;
         });
 
         //wenn Speichern gedrückt wird, sollen neue werte gespeichert werden
@@ -389,7 +384,7 @@ public class Rezeptbuch {
 
         //wenn man Rezept exportieren möchte, export button drücken und es erscheint ein Speicherpfad-Window
         exportButton.addActionListener(e -> {
-            ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
+            ArrayList<Rezept> rezepte_temp = new ArrayList<>();
             rezepte_temp.add(rezept);
             JFileChooser chooser = new JFileChooser("./app/src/main/resources");
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Rezepte", "csv");
@@ -413,9 +408,6 @@ public class Rezeptbuch {
                     null,
                     possibilities,
                     "Gut");
-            if ((rating != null) && (rating.length() > 0)) {
-                //todo
-            }
             rezept.rating = rating;
             ratingField.setText(rating);
         });
@@ -436,9 +428,7 @@ public class Rezeptbuch {
         for (Rezept rezept : rezepte_temp) {
             JButton tempButton = new JButton(rezept.name);
 
-            tempButton.addActionListener(e -> {
-                setupButton(rezept, tempButton);
-            });
+            tempButton.addActionListener(e -> setupButton(rezept, tempButton));
 
             tempButton.setPreferredSize(new Dimension(0, 200));
             panel.add(tempButton);
@@ -451,7 +441,7 @@ public class Rezeptbuch {
     boolean find_kategorie(Rezept rezept, String kategorien) {
         for (String kategorie : kategorien.split(",")) {
             for (String gibt : rezept.kategorien) {
-                if (kategorie.toLowerCase().equals(gibt.toLowerCase()))
+                if (kategorie.equalsIgnoreCase(gibt))
                     return true;
             }
         }
@@ -494,7 +484,7 @@ public class Rezeptbuch {
         panel.removeAll();
         panel.revalidate();
 
-        ArrayList<Rezept> temp = new ArrayList<Rezept>();
+        ArrayList<Rezept> temp = new ArrayList<>();
         for (Rezept rezept : rezepte) {
             boolean found_name = rezept.name.toLowerCase().contains(text.toLowerCase()) || text.length() == 0;
             boolean found_kategorie = find_kategorie(rezept, kategorie) || kategorie.length() == 0;
@@ -532,7 +522,7 @@ public class Rezeptbuch {
 
     // Hilfsmethode um Rezept in Stringform zu verwandeln und abzuspeichern
     ArrayList<String[]> getRecords(ArrayList<Rezept> rez) {
-        ArrayList<String[]> records = new ArrayList<String[]>();
+        ArrayList<String[]> records = new ArrayList<>();
 
         String[] header = {"Name", "Zutaten", "Personen", "Kategorien", "Zeit", "Zubereitung", "Rating"};
         records.add(header);
