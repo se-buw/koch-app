@@ -11,14 +11,14 @@ public class Rezept {
     String zubereitung;
     String rating; // allows recipes to be rated
 
-    public Rezept(String name, ArrayList<Ingredient> zutaten, String personen, String[] kategorien, String zeit, String zubereitung) {
+    public Rezept(String name, ArrayList<Ingredient> zutaten, String personen, String[] kategorien, String zeit, String zubereitung,String r) {
         this.name = name;
         this.ingredients = zutaten;
         this.personen = personen;
         this.kategorien = kategorien;
         this.zeit = zeit;
         this.zubereitung = zubereitung;
-        this.rating = "Unbewertet";
+        this.rating = r;
     }
 
     // Wir brauchen die toString() Methode um die Namen im Listenmodus für den Export anzuzeigen

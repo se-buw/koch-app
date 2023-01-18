@@ -20,7 +20,7 @@ class RezeptTest {
 		String zeit = "30 min";
 		String zubereitung = "backen";
 
-		Rezept eierkuchen = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung);
+		Rezept eierkuchen = new Rezept(name, zutaten, personen, kategorien, zeit, zubereitung,"Gut");
 
 		assertEquals(name, eierkuchen.name);
 		assertEquals(zutaten, eierkuchen.ingredients);
@@ -29,5 +29,6 @@ class RezeptTest {
 		assertEquals("Unbewertet", eierkuchen.rating);
 		assertEquals(zeit, eierkuchen.zeit);
 		assertEquals(zubereitung, eierkuchen.zubereitung);
+		assertEquals("Gut", eierkuchen.rating);
 		}
 	}

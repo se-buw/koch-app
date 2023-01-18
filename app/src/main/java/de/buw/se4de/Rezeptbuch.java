@@ -65,11 +65,12 @@ public class Rezeptbuch {
                     String kategorienVoll = csvRecord.get("Kategorien");
                     String zeit = csvRecord.get("Zeit");
                     String zubereitung = csvRecord.get("Zubereitung").replaceAll(";", "\n");
+                    String rating = csvRecord.get("Rating").trim();
 
                     String[] zutatenString = zutatenVoll.split(";");
 
                     String[] kategorien = kategorienVoll.split(";");
-                    Rezept rezept = new Rezept(name, ing, personen, kategorien, zeit, zubereitung);
+                    Rezept rezept = new Rezept(name, ing, personen, kategorien, zeit, zubereitung,rating);
                     parseRecipeIngredients(rezept, zutatenString);
                     temp.add(rezept);
                 }
@@ -211,7 +212,7 @@ public class Rezeptbuch {
 
         //wenn Neu-Button gedrückt wird, erstellt man ein neues Rezept im Rezeptbuch
         neuButton.addActionListener(e -> {
-            Rezept neu = new Rezept("neu", new ArrayList<>(), "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung");
+            Rezept neu = new Rezept("neu", new ArrayList<>(), "0", new String[]{"Kategorien"}, "00:00:00", "Zubereitung","Unbewertet");
             ArrayList<Rezept> rezepte_temp = new ArrayList<Rezept>();
             rezepte_temp.add(neu);
             rezepte.add(neu);
