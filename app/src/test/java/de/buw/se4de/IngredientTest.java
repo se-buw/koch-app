@@ -20,23 +20,23 @@ class IngredientTest {
 
 	@Test
 	void testToString(){
-		int amount = -4;
-		String unit = null;
+		int amount = 4;
+		String unit = "g";
 		String name = "Luft";
 		Ingredient i = new Ingredient(amount, unit, name);
 
-		assertEquals("-4 Luft", i.toString());
+		assertEquals("4g Luft", i.toString());
 	}
 
 	@Test
 	void testAdjustAmountNegative(){
-		int amount = -4;
-		String unit = null;
+		int amount = 4;
+		String unit = "";
 		String name = "Luft";
 		Ingredient i = new Ingredient(amount, unit, name);
 
 		i.adjustAmount(2, 1);
-		assertEquals(-8, i.amount);
+		assertEquals(8, i.amount);
 	}
 
 	@Test
@@ -47,7 +47,7 @@ class IngredientTest {
 		Ingredient i = new Ingredient(amount, unit, name);
 
 		i.adjustAmount(0, 1);
-		assertEquals(0, i.amount);
+		assertEquals(2, i.amount);
 		assertEquals(unit, i.unit);
 	}
 

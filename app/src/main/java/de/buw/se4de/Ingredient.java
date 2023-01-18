@@ -9,7 +9,7 @@ import java.util.List;
 // IMPORTANT: for conversion to work, ingredients in csv must be written in 'amount/unit/name;' format and
 // edited ingredients must be written in 'amountunit name' format
 public class Ingredient {
-    int amount;
+    int amount; //TODO keine negative Anzahl??
     String unit;
     String name;
 
@@ -24,11 +24,16 @@ public class Ingredient {
         return amount + unit + " " + name;
     }
 
-    public void adjustAmount(int desiredServings, int recipeServings) {      // we pass the amount the user desires, as well as the servings the original recipe can generate into the function
+    public void adjustAmount(int desiredServings, int recipeServings) {
+        // we pass the amount the user desires, as well as the servings the original recipe can generate into the function
         // just to be safe we ensure that the user wants a non-zero number of servings
-        if (desiredServings > 0) {
-            int singleServing = amount / recipeServings;
-            amount = singleServing * desiredServings;
+        if (recipeServings > 0) {
+            if (desiredServings > 0) {
+                float singleServing = (float) amount / (float) recipeServings;
+                amount = (int) (singleServing * desiredServings);
+            }
+        }else {
+            amount = 0;
         }
     }
 }

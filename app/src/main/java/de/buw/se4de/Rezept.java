@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 public class Rezept {
     String name;
-    //String[] zutaten;
     ArrayList<Ingredient> ingredients;
     String personen;
     String[] kategorien;
     String zeit;
     String zubereitung;
-    String rating = "Unbewertet"; // allows recipes to be rated
+    String rating; // allows recipes to be rated
 
     public Rezept(String name, ArrayList<Ingredient> zutaten, String personen, String[] kategorien, String zeit, String zubereitung) {
         this.name = name;
@@ -25,19 +24,5 @@ public class Rezept {
     // Wir brauchen die toString() Methode um die Namen im Listenmodus für den Export anzuzeigen
     public String toString(){
         return name;
-    }
-
-    public String ingredientString(boolean display) {
-        String divider = ";";
-
-        if (display){
-            divider = "\n";
-        }
-        String allStrings = "";
-        for (Ingredient ingredient : ingredients) {
-            allStrings.concat(ingredient.toString() + divider);
-            System.out.println(allStrings);
-        }
-        return allStrings;
     }
 }
