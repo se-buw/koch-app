@@ -55,7 +55,8 @@ public class Rezeptbuch {
 
     // nimmt den pfad zu einer CSV Datei und gibt eine Liste mit Rezepten zurück
     ArrayList<Rezept> load(String pfad) {
-        ArrayList<Rezept> temp = new ArrayList<Rezept>();
+        System.out.println("hierr");
+        ArrayList<Rezept> temp = new ArrayList<>();
         ArrayList<Ingredient> ing = new ArrayList<>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
 			CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
@@ -70,13 +71,14 @@ public class Rezeptbuch {
                     String[] zutatenString = zutatenVoll.split(";");
 
                     String[] kategorien = kategorienVoll.split(";");
-
+                    System.out.println(name + "," + zutatenVoll);
                     Rezept rezept = new Rezept(name, ing, personen, kategorien, zeit, zubereitung);
                     parseRecipeIngredients(rezept, zutatenString);
                     temp.add(rezept);
                 }
 		} catch (Exception e) {
 			e.printStackTrace();
+            System.out.println(":C");
 		}
         return temp;
     } 
@@ -170,7 +172,7 @@ public class Rezeptbuch {
             addRezepte(auswahlPanel, rezepte_temp);
             // an mehereren Orten speichern wir in eine alternative Datei
             // diese wird derzeit nicht benutzt, war aber sehr hilfreich bei Fehlermeldungen
-            save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+            save("./src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
         /* wenn Export-Button gedrückt wird, öffnet sich Fenster wo der Speicherort vom csv file festgelegt wird */
@@ -218,7 +220,7 @@ public class Rezeptbuch {
             rezepte_temp.add(neu);
             rezepte.add(neu);
             addRezepte(auswahlPanel, rezepte_temp);
-            save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+            save("./src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
     }
 
@@ -242,7 +244,7 @@ public class Rezeptbuch {
             @Override
             public void windowClosing(WindowEvent e) {
                 rezept_offen = false;
-                save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+                save("./src/main/resources/rezeptebuch_LIVE.csv", rezepte);
             }
         });
 
@@ -385,7 +387,7 @@ public class Rezeptbuch {
             parseRecipeIngredients(rezept, temp);
 
 
-            save("./app/src/main/resources/rezeptebuch_LIVE.csv", rezepte);
+            save("./src/main/resources/rezeptebuch_LIVE.csv", rezepte);
         });
 
         //wenn man Rezept exportieren möchte, export button drücken und es erscheint ein Speicherpfad-Window
@@ -460,29 +462,37 @@ public class Rezeptbuch {
         return false;
     }
 
-    Rezept parseRecipeIngredients(Rezept rezept, String[] temp) {
+    void parseRecipeIngredients(Rezept rezept, String[] temp) {
+        rezept.ingredients.clear();
         for (String ingredientString : temp) {
-            // gets length of integers at beginning of string, so that we can parse out amount + units
-            // example: 400g Mehl
-            int res = 0;
-            // this loop will check how many of the first n characters are part of an integer and return the number
-            // example: res = 400 at the end of the loop
-            for (int i=0; i < ingredientString.length(); i++) {
-                char c = ingredientString.charAt(i);
-                if (c < '0' || c > '9') continue;
-                res = res * 10 + (c - '0');
+            ingredientString = ingredientString.trim();
+            String[] dissassemble = ingredientString.split(" ");
+
+            if(dissassemble.length > 1) {
+                String amountnunit = dissassemble[0];
+                String name = dissassemble[1];
+
+                int amount = 0;
+                String unit = "";
+                String c = "";
+                for (int i=0; i < amountnunit.length(); i++) {
+                    if(amountnunit == "1Prise") {
+                        System.out.println(c);
+                    }
+                    c += amountnunit.charAt(i);
+                    if(!c.matches("[0-9]+")){
+                        unit = amountnunit.substring(i);
+                        amount = Integer.parseInt(amountnunit.substring(0,i));
+                        //System.out.println("in loop: " + unit);
+                        //System.out.println(amount);
+                        break;
+                    }
+                }
+                rezept.ingredients.add(new Ingredient(amount,unit,name));
+            }else{
+                System.out.println(dissassemble[0]);
             }
-            // we split the string at all empty spaces to separate the amount+unit from the name part
-            // example: substrings would be '400g' + 'Mehl'
-            String[] subIngredients = ingredientString.split(" ");
-            // We create a new ingredient to add to the recipe, with the following
-            rezept.ingredients.add(new Ingredient(res, // the number at the beginning of the first string, in our example '400'
-                    ingredientString.substring(String.valueOf(res).length(),subIngredients[0].length()), // we add the substring of the amount+unit that denotes the unit.
-                    // we do this by creating a substring of '400g' starting at the end of the length of the integer previously determined, up to the end of the actual string
-                    // essentially everything past the last '0' in 400 and up to and including the 'g'. If someone were to write '400gramm' the entire word 'gramm' would be parsed
-                    subIngredients[1])); // the second part of the split string, which would be 'Mehl'
         }
-        return rezept;
     }
 
     // ersetzt die Rezeptknöpfe mit den die in der Suche gezeigt werden sollen
