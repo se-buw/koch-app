@@ -43,7 +43,6 @@ public class Rezeptbuch {
         // wenn schon Rezeptbuch offen ist, wollen wir kein zweites
         if (running) return rezeptBuchWindow;
         running = true;
-        System.out.println("Rezeptbuch geöffnet");
 
         // Rezepte laden
         rezepte.addAll(load(path));
@@ -55,7 +54,6 @@ public class Rezeptbuch {
 
     // nimmt den pfad zu einer CSV Datei und gibt eine Liste mit Rezepten zurück
     ArrayList<Rezept> load(String pfad) {
-        System.out.println("hierr");
         ArrayList<Rezept> temp = new ArrayList<>();
         ArrayList<Ingredient> ing = new ArrayList<>();
 		try (Reader reader = Files.newBufferedReader(Paths.get(pfad), StandardCharsets.UTF_8);
@@ -71,14 +69,12 @@ public class Rezeptbuch {
                     String[] zutatenString = zutatenVoll.split(";");
 
                     String[] kategorien = kategorienVoll.split(";");
-                    System.out.println(name + "," + zutatenVoll);
                     Rezept rezept = new Rezept(name, ing, personen, kategorien, zeit, zubereitung);
                     parseRecipeIngredients(rezept, zutatenString);
                     temp.add(rezept);
                 }
 		} catch (Exception e) {
 			e.printStackTrace();
-            System.out.println(":C");
 		}
         return temp;
     } 
@@ -476,21 +472,18 @@ public class Rezeptbuch {
                 String unit = "";
                 String c = "";
                 for (int i=0; i < amountnunit.length(); i++) {
-                    if(amountnunit == "1Prise") {
-                        System.out.println(c);
-                    }
                     c += amountnunit.charAt(i);
                     if(!c.matches("[0-9]+")){
                         unit = amountnunit.substring(i);
-                        amount = Integer.parseInt(amountnunit.substring(0,i));
-                        //System.out.println("in loop: " + unit);
-                        //System.out.println(amount);
+                        try {
+                            amount = Integer.parseInt(amountnunit.substring(0,i));
+                        }
+                        catch (Exception ignored){}
                         break;
                     }
                 }
-                rezept.ingredients.add(new Ingredient(amount,unit,name));
-            }else{
-                System.out.println(dissassemble[0]);
+                if(amount > 0)
+                    rezept.ingredients.add(new Ingredient(amount,unit,name));
             }
         }
     }
