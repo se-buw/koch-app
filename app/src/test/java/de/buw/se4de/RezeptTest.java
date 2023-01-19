@@ -26,7 +26,6 @@ class RezeptTest {
 		assertEquals(zutaten, eierkuchen.ingredients);
 		assertEquals(personen, eierkuchen.personen);
 		assertEquals(kategorien, eierkuchen.kategorien);
-		assertEquals("Unbewertet", eierkuchen.rating);
 		assertEquals(zeit, eierkuchen.zeit);
 		assertEquals(zubereitung, eierkuchen.zubereitung);
 		assertEquals("Gut", eierkuchen.rating);
